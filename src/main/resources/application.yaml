@@ -1,0 +1,18 @@
+server:
+  port: 8090
+spring:
+  thymeleaf:
+    prefix: classpath:/templates/
+
+
+  datasource:
+    url: jdbc:mysql://localhost:3307/Newzhiliang?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    username: root
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+
+
+mybatis:
+  mapper-locations: classpath:com/poi/mapper/*.xml
+

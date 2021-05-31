@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.poi.mapper.Model3Dao">
+    <insert id="addModel3" parameterType="com.poi.polo.Model3"> <!-- select是reultType 代表返回值类型，而我是insert 不反回，所以是parameterType，代表参数类型 -->
+        insert into model3(department,station,percentage,month) values (#{department},#{station},#{percentage},#{month})
+    </insert>
+
+    <select id="selectModel3ByMonth" resultType="com.poi.polo.Model3">
+        select department,station,percentage,month from model3 where #{month}=mid(month,7,1)
+    </select>
+</mapper>
