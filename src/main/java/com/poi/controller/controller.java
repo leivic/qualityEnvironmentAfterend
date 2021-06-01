@@ -1,8 +1,11 @@
 package com.poi.controller;
 
 
+import com.poi.polo.Model1;
 import com.poi.polo.Model3;
+import com.poi.service.Model1Service;
 import com.poi.service.Model3Service;
+import com.poi.util.MultiPartFileUtil;
 import lombok.SneakyThrows;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -21,9 +24,14 @@ import java.util.Map;
 
 @RestController
 public class controller {
+    @Autowired
+    private MultiPartFileUtil multiPartFileUtil;//自动归装配bean，获得一个该类的对象
 
     @Autowired
     private Model3Service model3Service;
+
+    @Autowired
+    private Model1Service model1Service;
 
     @RequestMapping("/testConnect")
     public String testConnect(){
@@ -66,6 +74,38 @@ public class controller {
 
 
         }
+    }
+
+    @PostMapping("/exportModel1")
+    public void exportModel1(@RequestParam("file") MultipartFile file) throws IOException{
+        String year="2021";//虚构一个变量 本来该变量是参数传入的 这里先虚构数据
+        String month="4";//虚构一个月份
+
+        FileInputStream fns=(FileInputStream)file.getInputStream();
+        POIFSFileSystem pfs=new POIFSFileSystem(fns);
+        HSSFWorkbook wb=new HSSFWorkbook(pfs);
+        HSSFSheet sheetAt = wb.getSheetAt(0);//抽象意义上获得导入excel的第一个sheet 该sheet是HSSFSheet类型的
+        if(sheetAt==null) {
+            return;
+        }
+        HSSFCell Row3Col1=sheetAt.getRow(2).getCell(0);//链式编程  当sheeAt.getRow得到的对象 是拥有getCell方法类型的对象时 可以继续.
+        //获得车间的值
+        System.out.println(Row3Col1.toString());
+
+        int maxAmount = (sheetAt.getLastRowNum()-2)*((sheetAt.getRow(2).getLastCellNum()-1)/4);
+        //根据传入excel格式的不同，调用poi封装的方法，来判断对象数组共有多少个对象 由于上式值类型都是int 所以可以进行运算 值类型很重要
+        Model1[] model1s=new Model1[maxAmount];
+        System.out.println("对象数组最大可存"+maxAmount+"个对象");
+
+        for(int rowIndex=2;rowIndex<=sheetAt.getLastRowNum()-1;rowIndex++){//首先循环每行 从第三行开始 不到最后一行，以此来获得不同的工段
+            HSSFCell cellWorkshop = sheetAt.getRow(rowIndex).getCell(1);//获得循环的每一行的工段的那个单元格
+            System.out.println("工段的单元格包括"+cellWorkshop.toString()+"工段");
+            for (int colIndex=2;colIndex<=sheetAt.getRow(2).getLastCellNum();colIndex++){//循环每一行的后面每一个单元格
+                HSSFCell cell = sheetAt.getRow(rowIndex).getCell(colIndex);//抽象的cell就是我在循环的每一个单元格
+
+            }
+        }
+
     }
 
     @PostMapping("/exportModel3")
@@ -114,4 +154,5 @@ public class controller {
         System.out.println(month.get("month"));
         return model3Service.selectModel3ByMonth(month.get("month"));//month.get（"month"）是指 取得键为month的值，是string类型的
     }
+
     }
