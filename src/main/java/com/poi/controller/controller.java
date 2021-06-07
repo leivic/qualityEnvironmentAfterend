@@ -1,10 +1,15 @@
 package com.poi.controller;
 
 
+import com.poi.Security.custom.CustomUserDetailsService;
+import com.poi.mapper.UserDao;
 import com.poi.polo.Model1;
 import com.poi.polo.Model3;
+import com.poi.polo.User;
 import com.poi.service.Model1Service;
 import com.poi.service.Model3Service;
+import com.poi.service.PermissionService;
+import com.poi.service.UserService;
 import com.poi.util.MultiPartFileUtil;
 import lombok.SneakyThrows;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -14,9 +19,12 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
+import com.poi.Security.utils.Response;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
@@ -25,7 +33,11 @@ import java.util.Map;
 @RestController
 public class controller {
     @Autowired
-    private MultiPartFileUtil multiPartFileUtil;//自动归装配bean，获得一个该类的对象
+    private UserService userService;
+    @Autowired
+    private PermissionService permissionService;
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
 
     @Autowired
     private Model3Service model3Service;
@@ -38,6 +50,69 @@ public class controller {
 
         return "服务器启动成功";
     }
+
+
+    @RequestMapping("/hello")
+    @ResponseBody
+    public Response hello(){
+        return new Response("200","hello!");
+    }
+
+    //该方法我们在security配置类中指定了admin角色才可以访问
+    //当然也可以直接添加@PreAuthorize("hasRole('admin')")
+    @RequestMapping("/admin")
+    @ResponseBody
+    public Response admin(){
+        return new Response("200","admin!");
+    }//return new Response 是在生成匿名对象
+    //当用户具有select权限时才可以访问该方法
+    @PreAuthorize("hasAuthority('select')")//springsercurity封装的注解
+    @RequestMapping("/select")
+    @ResponseBody
+    public Response select(){
+        return new Response("200","select");
+    }
+    //当用户具有insert权限时才可以访问该方法
+    @PreAuthorize("hasAuthority('insert')")
+    @RequestMapping("/insert")
+    @ResponseBody
+    public Response insert(){
+        return new Response("200","insert");
+    }
+    //当用户具有update权限时才可以访问该方法
+    @PreAuthorize("hasAuthority('update')")
+    @RequestMapping("/update")
+    @ResponseBody
+    public Response update(){
+        return new Response("200","update");
+    }
+    //如果访问需要登录的接口，如果用户还没登录就会跳转到这个接口
+    @RequestMapping("/login_page")
+    @ResponseBody
+    public Response root(){
+        Response response = new Response("-200","未登录！");
+        return response;
+    }
+
+    @RequestMapping("/getUser")
+    @ResponseBody
+    public User getUser(){
+        //获取我们正在登陆的用户信息
+        //注意这里的User是security的
+        org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        //这里的User才是我们实体类里面的
+        User user = userService.findByName(userDetails.getUsername());
+        return user;
+    }
+
+    @ResponseBody
+    @RequestMapping("/a1")
+    private UserDetails getDetails(){
+        //获取正在登录的详细信息 前端根据该方法返回信息判断 页面跳转和显现等
+        org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userDetails;
+    }
+
 
     @PostMapping("/exportTestPoi")
     @SneakyThrows
