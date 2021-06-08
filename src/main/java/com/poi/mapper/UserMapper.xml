@@ -6,4 +6,12 @@
     <select id="findByName" resultType="com.poi.polo.User">
         select * from user where username = #{username}
     </select>
+    <select id="findAllUser" parameterType="String" resultType="Map">
+                SELECT
+        u.id,u.xingming,u.username,r.role_name
+        FROM
+        `role`as r,`user` AS u,`user_role_relation` as ur
+        where
+        u.id=ur.user_id and r.id=ur.role_id
+    </select>
 </mapper>

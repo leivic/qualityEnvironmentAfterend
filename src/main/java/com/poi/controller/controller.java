@@ -106,6 +106,11 @@ public class controller {
     }
 
     @ResponseBody
+    @RequestMapping("/findALLUser")
+    public List<Map<String,Object>> findALLUser(int pageNum)throws Exception{ //这样的参数 ajax直接params传就行了
+        return userService.findAllUser(pageNum);//pagesize10已经在service里面写死
+    }
+    @ResponseBody
     @RequestMapping("/a1")
     private UserDetails getDetails(){
         //获取正在登录的详细信息 前端根据该方法返回信息判断 页面跳转和显现等

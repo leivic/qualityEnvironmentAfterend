@@ -33,4 +33,14 @@ public class User {
 
     private String username;
     private String password;
+    private String xingming;
+    private String role_name;
+
+    public String getXingming() {
+        return xingming;
+    }
+
+    public void setXingming(String xingming) {
+        this.xingming = xingming;
+    }
 }

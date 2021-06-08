@@ -111,6 +111,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <!-- 分页插件,特别注意版本问题, 看到评论以后得以纠正 -->
+            <version>1.2.3</version>
+        </dependency>
     </dependencies>
 
     <build>
