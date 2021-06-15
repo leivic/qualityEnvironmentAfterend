@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.poi.mapper.GongWeiFuHeDao">
+    <insert id="addGongWeiFuHe" parameterType="com.poi.polo.GongWeiFuHe"> <!-- select是reultType 代表返回值类型，而我是insert 不反回，所以是parameterType，代表参数类型 -->
+        insert into gongweifuhelv
+        (assignmentid,workmodel,itemdescription,zipingorchoucha,Review,stationname,applicableterms,meettheterms,stationpercentage,auditquestions,pinshenquyu,pinshenshijian,yinshenrenyuan) values
+        (#{assignMentid},#{workModel},#{itemDescription},#{ziPingORChouCha},#{review},#{stationName},#{applicableTerms},#{meetTheTerms},#{stationPercentage},#{auditQuestions},#{pinShenQuYu},#{pinShenShiJian},#{yinShenRenYuan})
+    </insert>
+
+    <select id="selectGongWeiFuHeListByDate" resultType="com.poi.polo.GongWeiFuHe">
+        select id,assignmentid,workmodel,itemdescription,zipingorchoucha,Review,stationname,applicableterms,meettheterms,stationpercentage,auditquestions,pinshenquyu,pinshenshijian,yinshenrenyuan from gongweifuhelv where left(pinshenshijian,7) = #{date}
+    </select>
+
+    <delete id="deleteGongWeiFuHeById">
+        delete from gongweifuhelv where id = #{id}
+    </delete>
+</mapper>

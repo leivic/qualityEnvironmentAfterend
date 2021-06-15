@@ -3,13 +3,11 @@ package com.poi.controller;
 
 import com.poi.Security.custom.CustomUserDetailsService;
 import com.poi.mapper.UserDao;
+import com.poi.polo.GongWeiFuHe;
 import com.poi.polo.Model1;
 import com.poi.polo.Model3;
 import com.poi.polo.User;
-import com.poi.service.Model1Service;
-import com.poi.service.Model3Service;
-import com.poi.service.PermissionService;
-import com.poi.service.UserService;
+import com.poi.service.*;
 import com.poi.util.MultiPartFileUtil;
 import lombok.SneakyThrows;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -18,6 +16,10 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -44,6 +46,9 @@ public class controller {
 
     @Autowired
     private Model1Service model1Service;
+
+    @Autowired
+    private GongWeiFuHeService gongWeiFuHeService;
 
     @RequestMapping("/testConnect")
     public String testConnect(){
@@ -155,6 +160,69 @@ public class controller {
 
         }
     }
+
+    @PostMapping("exportGongWeiFuHe")
+    public void exportGongWeiFuHe(@RequestParam("file") MultipartFile file) throws IOException{
+        FileInputStream fns=(FileInputStream)file.getInputStream();
+        XSSFWorkbook wb=new XSSFWorkbook(fns);//xssWorkbook少了hssworkbook的解析成 POIFSFileSystem数据类型这一步
+        XSSFSheet sheetAt = wb.getSheetAt(0);
+        if(sheetAt==null) {
+            return;
+        }
+
+        //由此得到 应该创建一个多大的对象数组
+        int number =0;
+        for(int rowIndex=0;rowIndex<sheetAt.getLastRowNum();rowIndex++){
+            XSSFCell reviewCell = sheetAt.getRow(rowIndex).getCell(20);
+            if (reviewCell.toString().equals("工位")){////循环第20列  如果第二十列是工位 再判断后面是过程符合率 还是工位符合率 此处注意.equal()和==的区别
+                XSSFCell cell = sheetAt.getRow(rowIndex).getCell(28);//28cell 适用条款数
+                if(cell.toString() !=""){
+                    number ++;
+                    System.out.println(number);//由此得到 应该创建一个多大的对象数组
+                }
+            }
+            }
+
+        GongWeiFuHe[] gongWeiFuHes =new GongWeiFuHe[number];//创建对象数组
+        for(int rowIndex=0,num = 0;rowIndex<sheetAt.getLastRowNum();rowIndex++){
+            XSSFCell reviewCell = sheetAt.getRow(rowIndex).getCell(20);
+            if (reviewCell.toString().equals("工位")){////循环第20列  如果第二十列是工位 再判断后面是过程符合率 还是工位符合率 此处注意.equal()和==的区别
+                XSSFCell cell = sheetAt.getRow(rowIndex).getCell(28);//28cell 适用条款数
+                if(cell.toString() !=""){//在此处判断   当处于这种情况下 这一行都是工位数据 下面对对象数组里对对象进行赋值
+                    XSSFRow rowGongWei=sheetAt.getRow(rowIndex);//取当前行
+                    gongWeiFuHes[num]=new GongWeiFuHe();
+                    gongWeiFuHes[num].setAssignMentid(rowGongWei.getCell(9).toString());
+                    gongWeiFuHes[num].setWorkModel(rowGongWei.getCell(10).toString());
+                    gongWeiFuHes[num].setItemDescription(rowGongWei.getCell(11).toString());
+                    gongWeiFuHes[num].setZiPingORChouCha("");//暂时 该字段表里没有 先为空
+                    gongWeiFuHes[num].setReview(rowGongWei.getCell(20).toString());
+                    gongWeiFuHes[num].setStationName(rowGongWei.getCell(27).toString());
+                    gongWeiFuHes[num].setApplicableTerms(rowGongWei.getCell(28).toString());
+                    gongWeiFuHes[num].setMeetTheTerms(rowGongWei.getCell(29).toString());
+                    gongWeiFuHes[num].setStationPercentage(rowGongWei.getCell(30).toString());
+                    gongWeiFuHes[num].setAuditQuestions(rowGongWei.getCell(31).toString());
+                    gongWeiFuHes[num].setPinShenQuYu(rowGongWei.getCell(32).toString());
+                    gongWeiFuHes[num].setPinShenShiJian(rowGongWei.getCell(33).toString());
+                    gongWeiFuHes[num].setYinShenRenYuan(rowGongWei.getCell(34).toString());
+                    System.out.println(gongWeiFuHes[num]);//此时已获得对象 获得了gongWeiFuHeService的 .addGongWeiFuHe方法需要的参数
+                    gongWeiFuHeService.addGongWeiFuHe(gongWeiFuHes[num]);
+
+                }
+            }
+        }
+    }
+
+    @RequestMapping("/selectGongWeiFuHeListByDate")
+    @ResponseBody
+    List<GongWeiFuHe> selectGongWeiFuHeListByDate(String date){
+        return gongWeiFuHeService.selectGongWeiFuHeListByDate(date);
+    }
+
+    @RequestMapping("/deleteGongWeiFuHeById")
+    @ResponseBody
+    public void deleteGongWeiFuHeById(int id){
+        gongWeiFuHeService.deleteGongWeiFuHeById(id);
+    };
 
     @PostMapping("/exportModel1")
     public void exportModel1(@RequestParam("file") MultipartFile file) throws IOException{
