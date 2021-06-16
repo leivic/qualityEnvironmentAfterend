@@ -13,5 +13,5 @@ public interface GongWeiFuHeDao {
 
     void deleteGongWeiFuHeById(int id);
 
-
+    List<GongWeiFuHe> selectAllGongWeiFuHe();//查询所有值
 }

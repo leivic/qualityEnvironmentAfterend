@@ -1,5 +1,6 @@
 package com.poi.service;
 
+import com.github.pagehelper.PageHelper;
 import com.poi.mapper.GongWeiFuHeDao;
 import com.poi.polo.GongWeiFuHe;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,5 +23,10 @@ public class GongWeiFuHeService {
 
     public void deleteGongWeiFuHeById(int id){
         gongWeiFuHeDao.deleteGongWeiFuHeById(id);
+    };
+
+    public List<GongWeiFuHe> selectAllGongWeiFuHe(int pageNum)throws Exception{
+        PageHelper.startPage(pageNum,7);//分页插件
+        return gongWeiFuHeDao.selectAllGongWeiFuHe();
     };
 }

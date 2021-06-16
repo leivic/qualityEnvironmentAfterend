@@ -194,7 +194,6 @@ public class controller {
                     gongWeiFuHes[num].setAssignMentid(rowGongWei.getCell(9).toString());
                     gongWeiFuHes[num].setWorkModel(rowGongWei.getCell(10).toString());
                     gongWeiFuHes[num].setItemDescription(rowGongWei.getCell(11).toString());
-                    gongWeiFuHes[num].setZiPingORChouCha("");//暂时 该字段表里没有 先为空
                     gongWeiFuHes[num].setReview(rowGongWei.getCell(20).toString());
                     gongWeiFuHes[num].setStationName(rowGongWei.getCell(27).toString());
                     gongWeiFuHes[num].setApplicableTerms(rowGongWei.getCell(28).toString());
@@ -204,12 +203,18 @@ public class controller {
                     gongWeiFuHes[num].setPinShenQuYu(rowGongWei.getCell(32).toString());
                     gongWeiFuHes[num].setPinShenShiJian(rowGongWei.getCell(33).toString());
                     gongWeiFuHes[num].setYinShenRenYuan(rowGongWei.getCell(34).toString());
+                    gongWeiFuHes[num].setZiPingORChouCha(rowGongWei.getCell(71).toString());//评审性质字段 后面添加
                     System.out.println(gongWeiFuHes[num]);//此时已获得对象 获得了gongWeiFuHeService的 .addGongWeiFuHe方法需要的参数
                     gongWeiFuHeService.addGongWeiFuHe(gongWeiFuHes[num]);
 
                 }
             }
         }
+    }
+
+    @RequestMapping("/selectAllGongWeiFuHe")
+    List<GongWeiFuHe> selectAllGongWeiFuHe(int pageNum)throws Exception{
+        return gongWeiFuHeService.selectAllGongWeiFuHe(pageNum);
     }
 
     @RequestMapping("/selectGongWeiFuHeListByDate")

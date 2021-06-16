@@ -6,7 +6,9 @@
     <insert id="addGongWeiFuHe" parameterType="com.poi.polo.GongWeiFuHe"> <!-- select是reultType 代表返回值类型，而我是insert 不反回，所以是parameterType，代表参数类型 -->
         insert into gongweifuhelv
         (assignmentid,workmodel,itemdescription,zipingorchoucha,Review,stationname,applicableterms,meettheterms,stationpercentage,auditquestions,pinshenquyu,pinshenshijian,yinshenrenyuan) values
-        (#{assignMentid},#{workModel},#{itemDescription},#{ziPingORChouCha},#{review},#{stationName},#{applicableTerms},#{meetTheTerms},#{stationPercentage},#{auditQuestions},#{pinShenQuYu},#{pinShenShiJian},#{yinShenRenYuan})
+        (#{assignMentid},#{workModel},#{itemDescription},#{ziPingORChouCha},#{review},#{stationName},#{applicableTerms},#{meetTheTerms},#{stationPercentage},#{auditQuestions},#{pinShenQuYu},#{pinShenShiJian},#{yinShenRenYuan});
+        alter table gongweifuhelv drop id;
+        alter table gongweifuhelv add id bigint primary key not null auto_increment first;
     </insert>
 
     <select id="selectGongWeiFuHeListByDate" resultType="com.poi.polo.GongWeiFuHe">
@@ -14,6 +16,12 @@
     </select>
 
     <delete id="deleteGongWeiFuHeById">
-        delete from gongweifuhelv where id = #{id}
+        delete from gongweifuhelv where id = #{id};
+        alter table gongweifuhelv drop id;
+        alter table gongweifuhelv add id bigint primary key not null auto_increment first;
     </delete>
+
+    <select id="selectAllGongWeiFuHe" resultType="com.poi.polo.GongWeiFuHe">
+        select id,assignmentid,workmodel,itemdescription,zipingorchoucha,Review,stationname,applicableterms,meettheterms,stationpercentage,auditquestions,pinshenquyu,pinshenshijian,yinshenrenyuan from gongweifuhelv
+    </select>
 </mapper>
