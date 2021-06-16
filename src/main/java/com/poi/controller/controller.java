@@ -219,8 +219,8 @@ public class controller {
 
     @RequestMapping("/selectGongWeiFuHeListByDate")
     @ResponseBody
-    List<GongWeiFuHe> selectGongWeiFuHeListByDate(String date){
-        return gongWeiFuHeService.selectGongWeiFuHeListByDate(date);
+    List<GongWeiFuHe> selectGongWeiFuHeListByDate(String date,String pingShengXingZhi){
+        return gongWeiFuHeService.selectGongWeiFuHeListByDate(date,pingShengXingZhi);
     }
 
     @RequestMapping("/deleteGongWeiFuHeById")

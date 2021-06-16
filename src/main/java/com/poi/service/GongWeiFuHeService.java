@@ -17,8 +17,8 @@ public class GongWeiFuHeService {
         gongWeiFuHeDao.addGongWeiFuHe(gongWeiFuHe);//传一个gongweifuhe类型的数据进来
     };
 
-    public List<GongWeiFuHe> selectGongWeiFuHeListByDate(String date){
-        return gongWeiFuHeDao.selectGongWeiFuHeListByDate(date);
+    public List<GongWeiFuHe> selectGongWeiFuHeListByDate(String date,String pingShengXingZhi){
+        return gongWeiFuHeDao.selectGongWeiFuHeListByDate(date,pingShengXingZhi);
     };
 
     public void deleteGongWeiFuHeById(int id){
