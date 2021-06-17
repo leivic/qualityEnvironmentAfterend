@@ -17,7 +17,7 @@ public class GongWeiFuHe {
     private String stationName;//工位名称
     private String applicableTerms;//适用条款数
     private String meetTheTerms;//符合条款数
-    private String stationPercentage;//工位符合率
+    private Double stationPercentage;//工位符合率
     private String auditQuestions;//工位审核问题数
     private String pinShenQuYu;//评审区域
     private String pinShenShiJian;//评审时间
