@@ -49,6 +49,9 @@ public class controller {
     @Autowired
     private GongWeiFuHeService gongWeiFuHeService;
 
+    @Autowired
+    private GuoChenFuHeService guoChenFuHeService;
+
     @RequestMapping("/testConnect")
     public String testConnect(){
 
@@ -292,6 +295,65 @@ public class controller {
         }
 
     }
+
+    @PostMapping("/exportGuoChenFuHe")
+    public void exportGuoChenFuHe(@RequestParam("file") MultipartFile file) throws IOException{
+        FileInputStream fns=(FileInputStream)file.getInputStream();
+        XSSFWorkbook wb=new XSSFWorkbook(fns);//xssWorkbook少了hssworkbook的解析成 POIFSFileSystem数据类型这一步
+        XSSFSheet sheetAt = wb.getSheetAt(0);
+        if(sheetAt==null) {
+            return;
+        }
+
+        //由此得到 应该创建一个多大的对象数组
+        int number =0;
+        for(int rowIndex=0;rowIndex<sheetAt.getLastRowNum();rowIndex++){
+            XSSFCell reviewCell = sheetAt.getRow(rowIndex).getCell(20);
+            if (reviewCell.toString().equals("工位")){////循环第20列  如果第二十列是工位 再判断后面是过程符合率 还是工位符合率 此处注意.equal()和==的区别
+                XSSFCell cell = sheetAt.getRow(rowIndex).getCell(38);//第39列过程名称有值 则number＋＋
+                if(cell.toString() !=""){
+                    number ++;
+                    System.out.println(number);//由此得到 应该创建一个多大的对象数组
+                }
+            }
+        }
+
+
+        GuoChenFuHe[] guoChenFuHes =new GuoChenFuHe[number];//创建对象数组
+        for(int rowIndex=0,num = 0;rowIndex<sheetAt.getLastRowNum();rowIndex++){
+            XSSFCell reviewCell = sheetAt.getRow(rowIndex).getCell(20);
+            if (reviewCell.toString().equals("工位")){////循环第20列  如果第二十列是工位 再判断后面是过程符合率 还是工位符合率 此处注意.equal()和==的区别
+                XSSFCell cell = sheetAt.getRow(rowIndex).getCell(38);
+                if(cell.toString() !=""){//在此处判断   当处于这种情况下 这一行都是工位数据 下面对对象数组里对对象进行赋值
+                    XSSFRow rowGongWei=sheetAt.getRow(rowIndex);//取当前行
+                    guoChenFuHes[num]=new GuoChenFuHe();
+                    guoChenFuHes[num].setAssignMentid(rowGongWei.getCell(9).toString());
+                    guoChenFuHes[num].setWorkModel(rowGongWei.getCell(10).toString());
+                    guoChenFuHes[num].setItemDescription(rowGongWei.getCell(11).toString());
+                    guoChenFuHes[num].setReview(rowGongWei.getCell(20).toString());
+                    guoChenFuHes[num].setGuoChenMinChen(rowGongWei.getCell(38).toString());
+                    guoChenFuHes[num].setGuoChenPeiFen(rowGongWei.getCell(39).toString());
+                    guoChenFuHes[num].setGuoChenDeFen(rowGongWei.getCell(40).toString());
+                    guoChenFuHes[num].setGuoChenPercentage(rowGongWei.getCell(41).getNumericCellValue());//
+                    guoChenFuHes[num].setAuditQuestions(rowGongWei.getCell(42).toString());
+                    guoChenFuHes[num].setPinShenQuYu(rowGongWei.getCell(35).toString());
+                    guoChenFuHes[num].setPinShenShiJian(rowGongWei.getCell(36).toString());
+                    guoChenFuHes[num].setYinShenRenYuan(rowGongWei.getCell(37).toString());
+                    guoChenFuHes[num].setZiPinOrChouCha(rowGongWei.getCell(71).toString());//评审性质字段 后面添加
+                    System.out.println(guoChenFuHes[num]);//此时已获得对象 获得了gongWeiFuHeService的 .addGongWeiFuHe方法需要的参数
+                    guoChenFuHeService.addGuoChenFuHe(guoChenFuHes[num]);
+
+                }
+            }
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping("/selectAllGuoChenFuHe")
+    public List<GuoChenFuHe> selectAllGuoChenFuHe(){
+        return guoChenFuHeService.selectAllGuoChenFuHe();
+    };
+
 
     @PostMapping("/exportModel3")
     @SneakyThrows

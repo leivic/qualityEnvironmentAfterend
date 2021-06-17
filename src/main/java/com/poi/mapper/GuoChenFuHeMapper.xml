@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.poi.mapper.GuoChenFuHeDao">
+    <insert id="addGuoChenFuHe" parameterType="com.poi.polo.GuoChenFuHe"> <!-- select是reultType 代表返回值类型，而我是insert 不反回，所以是parameterType，代表参数类型 -->
+        insert into guochenfuhelv
+        (assignmentid,workmodel,itemdescription,zipinorchoucha,Review,guochenminchen,guochenpeifen,guochendefen,guochenpercentage,auditquestions,pinshenquyu,pinshenshijian,yinshenrenyuan) values
+        (#{assignMentid},#{workModel},#{itemDescription},#{ziPinOrChouCha},#{review},#{guoChenMinChen},#{guoChenPeiFen},#{guoChenDeFen},#{guoChenPercentage},#{auditQuestions},#{pinShenQuYu},#{pinShenShiJian},#{yinShenRenYuan});
+        alter table guochenfuhelv drop id;
+        alter table guochenfuhelv add id bigint primary key not null auto_increment first;
+    </insert>
+
+    <select id="selectAllGuoChenFuHe" resultType="com.poi.polo.GuoChenFuHe">
+        select id,assignmentid,workmodel,itemdescription,zipinorchoucha,Review,guochenminchen,guochenpeifen,guochendefen,guochenpercentage,auditquestions,pinshenquyu,pinshenshijian,yinshenrenyuan from guochenfuhelv
+    </select>
+
+
+</mapper>
