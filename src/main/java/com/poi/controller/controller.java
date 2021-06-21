@@ -216,8 +216,8 @@ public class controller {
 
     @ResponseBody
     @RequestMapping("/selectAllGongWeiFuHe")
-    List<GongWeiFuHe> selectAllGongWeiFuHe(int pageNum)throws Exception{
-        return gongWeiFuHeService.selectAllGongWeiFuHe(pageNum);
+    List<GongWeiFuHe> selectAllGongWeiFuHe(Integer pageNum)throws Exception{
+        return gongWeiFuHeService.selectAllGongWeiFuHe(pageNum.intValue());
     }
 
     @RequestMapping("/selectGongWeiFuHeListByDate")
@@ -354,6 +354,73 @@ public class controller {
         return guoChenFuHeService.selectAllGuoChenFuHe();
     };
 
+    @ResponseBody
+    @RequestMapping("/GetSecondGuoChenDataByQuYu") //按评审区域字段计算得分率平均值
+    GuoChenFuHeSecondData[] GetSecondGuoChenDataByQuYu(String date,String pingShengXingZhi){ //返回一个对象数组
+        System.out.println(guoChenFuHeService.selectGuoChenFuHeListByDate(date,pingShengXingZhi));
+        List<GuoChenFuHe> test=guoChenFuHeService.selectGuoChenFuHeListByDate(date,pingShengXingZhi);
+
+
+        List<String> quYuMinChen=test.stream().map(GuoChenFuHe::getPinShenQuYu).distinct().collect(Collectors.toList());
+        System.out.println(quYuMinChen);
+
+        GuoChenFuHeSecondData[] guoChenFuHeSecondData=new GuoChenFuHeSecondData[quYuMinChen.size()];
+
+        for(int i=0,n=quYuMinChen.size();i<n;i++){
+            final int d=i;
+            List<GuoChenFuHe> filterGuoChen=test.stream().filter(guoChenFuHe -> guoChenFuHe.getPinShenQuYu().equals(quYuMinChen.get(d))).collect(Collectors.toList());//过滤出和过程名称相等的list集合
+            System.out.println(filterGuoChen);
+            Double getGuoChenPercentage=(filterGuoChen.stream().filter(guoChenFuHe ->
+                    guoChenFuHe.getGuoChenPercentage()!=null).mapToDouble((GuoChenFuHe::getGuoChenPercentage)))
+                    .average().orElse(0D);
+            System.out.println(getGuoChenPercentage);
+
+            GuoChenFuHeSecondData guoChenFuHeSecondData1=new GuoChenFuHeSecondData();
+            guoChenFuHeSecondData1.setFenLeiYiJu(quYuMinChen.get(i));
+            guoChenFuHeSecondData1.setGuoChenpercentage(getGuoChenPercentage);
+            guoChenFuHeSecondData[i]=guoChenFuHeSecondData1;
+            System.out.println(guoChenFuHeSecondData1);
+        }
+
+        return guoChenFuHeSecondData;
+
+    }
+
+
+
+    @ResponseBody
+    @RequestMapping("/GetSecondGuoChenDataByGuoChen") //按过程字段计算得分率平均值
+    GuoChenFuHeSecondData[] GetSecondGuoChenDataByGuoChen(String date,String pingShengXingZhi){ //返回一个对象数组
+        System.out.println(guoChenFuHeService.selectGuoChenFuHeListByDate(date,pingShengXingZhi));
+        List<GuoChenFuHe> test=guoChenFuHeService.selectGuoChenFuHeListByDate(date,pingShengXingZhi);
+
+
+        List<String> guoChenMinChen=test.stream().map(GuoChenFuHe::getGuoChenMinChen).distinct().collect(Collectors.toList());
+        System.out.println(guoChenMinChen);
+
+        GuoChenFuHeSecondData[] guoChenFuHeSecondData=new GuoChenFuHeSecondData[guoChenMinChen.size()];
+
+        for(int i=0,n=guoChenMinChen.size();i<n;i++){
+            final int d=i;
+            List<GuoChenFuHe> filterGuoChen=test.stream().filter(guoChenFuHe -> guoChenFuHe.getGuoChenMinChen().equals(guoChenMinChen.get(d))).collect(Collectors.toList());//过滤出和过程名称相等的list集合
+            System.out.println(filterGuoChen);
+            Double getGuoChenPercentage=(filterGuoChen.stream().filter(guoChenFuHe ->
+                    guoChenFuHe.getGuoChenPercentage()!=null).mapToDouble((GuoChenFuHe::getGuoChenPercentage)))
+                    .average().orElse(0D);
+            System.out.println(getGuoChenPercentage);
+
+            GuoChenFuHeSecondData guoChenFuHeSecondData1=new GuoChenFuHeSecondData();
+            guoChenFuHeSecondData1.setFenLeiYiJu(guoChenMinChen.get(i));
+            guoChenFuHeSecondData1.setGuoChenpercentage(getGuoChenPercentage);
+            guoChenFuHeSecondData[i]=guoChenFuHeSecondData1;
+            System.out.println(guoChenFuHeSecondData1);
+        }
+
+        return guoChenFuHeSecondData;
+
+    }
+
+
 
     @PostMapping("/exportModel3")
     @SneakyThrows
@@ -401,5 +468,8 @@ public class controller {
         System.out.println(month.get("month"));//获取键值对map month中 键为month的值
         return model3Service.selectModel3ByMonth(month.get("month"));//month.get（"month"）是指 取得键为month的值，是string类型的
     }
+
+
+
 
     }

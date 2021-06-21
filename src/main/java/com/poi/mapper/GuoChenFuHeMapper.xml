@@ -15,5 +15,8 @@
         select id,assignmentid,workmodel,itemdescription,zipinorchoucha,Review,guochenminchen,guochenpeifen,guochendefen,guochenpercentage,auditquestions,pinshenquyu,pinshenshijian,yinshenrenyuan from guochenfuhelv
     </select>
 
+    <select id="selectGuoChenFuHeListByDate" resultType="com.poi.polo.GuoChenFuHe">
+        select id,assignmentid,workmodel,itemdescription,zipinorchoucha,Review,guochenminchen,guochenpeifen,guochendefen,guochenpercentage,auditquestions,pinshenquyu,pinshenshijian,yinshenrenyuan from guochenfuhelv where left(pinshenshijian,7) = #{date} and zipinorchoucha=#{pingShengXingZhi}
+    </select>
 
 </mapper>

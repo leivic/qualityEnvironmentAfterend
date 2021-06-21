@@ -20,4 +20,8 @@ public class GuoChenFuHeService {
     public List<GuoChenFuHe> selectAllGuoChenFuHe(){
         return guoChenFuHeDao.selectAllGuoChenFuHe();
     };
+
+    public  List<GuoChenFuHe> selectGuoChenFuHeListByDate(String date, String pingShengXingZhi){
+        return guoChenFuHeDao.selectGuoChenFuHeListByDate(date,pingShengXingZhi);
+    }
 }
