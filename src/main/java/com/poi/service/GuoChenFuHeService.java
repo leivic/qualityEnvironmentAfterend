@@ -1,5 +1,6 @@
 package com.poi.service;
 
+import com.github.pagehelper.PageHelper;
 import com.poi.mapper.GuoChenFuHeDao;
 import com.poi.polo.GuoChenFuHe;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,8 @@ public class GuoChenFuHeService {
         guoChenFuHeDao.addGuoChenFuHe(guoChenFuHe);
     };
 
-    public List<GuoChenFuHe> selectAllGuoChenFuHe(){
+    public List<GuoChenFuHe> selectAllGuoChenFuHe(int pageNum)throws Exception{
+        PageHelper.startPage(pageNum,7);//分页插件
         return guoChenFuHeDao.selectAllGuoChenFuHe();
     };
 

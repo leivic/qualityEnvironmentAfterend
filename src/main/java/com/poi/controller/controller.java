@@ -313,7 +313,7 @@ public class controller {
                 XSSFCell cell = sheetAt.getRow(rowIndex).getCell(38);//第39列过程名称有值 则number＋＋
                 if(cell.toString() !=""){
                     number ++;
-                    System.out.println(number);//由此得到 应该创建一个多大的对象数组
+                    System.out.println(number);//由此得到 应该创建一个多大的对象数
                 }
             }
         }
@@ -350,8 +350,9 @@ public class controller {
 
     @ResponseBody
     @RequestMapping("/selectAllGuoChenFuHe")
-    public List<GuoChenFuHe> selectAllGuoChenFuHe(){
-        return guoChenFuHeService.selectAllGuoChenFuHe();
+    public List<GuoChenFuHe> selectAllGuoChenFuHe(Integer pageNum)throws Exception{
+
+        return guoChenFuHeService.selectAllGuoChenFuHe(pageNum.intValue());
     };
 
     @ResponseBody
