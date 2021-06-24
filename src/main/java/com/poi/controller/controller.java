@@ -52,6 +52,9 @@ public class controller {
     @Autowired
     private GuoChenFuHeService guoChenFuHeService;
 
+    @Autowired
+    private GongWeiZhiLiangShengTaiYiShiService gongWeiZhiLiangShengTaiYiShiService;
+
     @RequestMapping("/testConnect")
     public String testConnect(){
 
@@ -470,6 +473,52 @@ public class controller {
         return model3Service.selectModel3ByMonth(month.get("month"));//month.get（"month"）是指 取得键为month的值，是string类型的
     }
 
+
+    @PostMapping("/exportGongWeiZhiLiangShengTaiYiShi")
+     public void exportGongWeiZhiLiangShengTaiYiShi(@RequestParam("file") MultipartFile file)throws IOException{
+         FileInputStream fns=(FileInputStream)file.getInputStream();
+         XSSFWorkbook wb=new XSSFWorkbook(fns);//xssWorkbook少了hssworkbook的解析成 POIFSFileSystem数据类型这一步
+         XSSFSheet sheetAt = wb.getSheetAt(0);
+         if(sheetAt==null) {
+             return;
+         }
+
+         //由此得到 应该创建一个多大的对象数组
+
+         for(int rowIndex=0,num = 0;rowIndex<sheetAt.getLastRowNum();rowIndex++){
+             XSSFCell cell = sheetAt.getRow(rowIndex).getCell(52);//先循环每一行 看区域的那个单元格不为空 再取当前这行做处理
+             if (cell.toString().length()>2){ //小于2截取字符串会报错
+                 if(cell.toString().substring(cell.toString().length()-2,cell.toString().length()).equals("车间")){//如果字符串最后两位＝"车间"
+                     XSSFRow rowZhiLiangShengTaiYiShi=sheetAt.getRow(rowIndex);//取当前行
+                     GongWeiZhiLiangShengTaiYiShi gongWeiZhiLiangShengTaiYiShi=new GongWeiZhiLiangShengTaiYiShi();
+                     gongWeiZhiLiangShengTaiYiShi.setGongWeiHao(rowZhiLiangShengTaiYiShi.getCell(53).toString());//工位号
+                     gongWeiZhiLiangShengTaiYiShi.setShenHeQuYu(rowZhiLiangShengTaiYiShi.getCell(52).toString());
+                     gongWeiZhiLiangShengTaiYiShi.setPinJiaRiQi(rowZhiLiangShengTaiYiShi.getCell(51).toString());
+                     gongWeiZhiLiangShengTaiYiShi.setDiXianYiShi(rowZhiLiangShengTaiYiShi.getCell(54).toString());
+                     gongWeiZhiLiangShengTaiYiShi.setZeRenYiShi(rowZhiLiangShengTaiYiShi.getCell(55).toString());
+                     gongWeiZhiLiangShengTaiYiShi.setZhuRenWengYiShi(rowZhiLiangShengTaiYiShi.getCell(56).toString());
+                     gongWeiZhiLiangShengTaiYiShi.setGaiJinYiShi(rowZhiLiangShengTaiYiShi.getCell(57).toString());
+                     gongWeiZhiLiangShengTaiYiShi.setJiGeFen("64");
+                     gongWeiZhiLiangShengTaiYiShi.setZongFen("80");
+                     gongWeiZhiLiangShengTaiYiShiService.addShengTaiYiShiData(gongWeiZhiLiangShengTaiYiShi);//添加进数据库
+                 }
+             }
+
+         }
+
+    }
+
+    @ResponseBody
+    @RequestMapping("/selectALLShengTaiYiShiData")
+    List<GongWeiZhiLiangShengTaiYiShi>selectALLShengTaiYiShiData(int pageNum){
+        return gongWeiZhiLiangShengTaiYiShiService.selectALLShengTaiYiShiData(pageNum);
+    }
+
+    @ResponseBody
+    @RequestMapping("/selectShengTaiYiShiDataByDate")
+    List<GongWeiZhiLiangShengTaiYiShi>selectShengTaiYiShiDataByDate(String date){
+        return gongWeiZhiLiangShengTaiYiShiService.selectShengTaiYiShiDataByDate(date);
+    }
 
 
 
