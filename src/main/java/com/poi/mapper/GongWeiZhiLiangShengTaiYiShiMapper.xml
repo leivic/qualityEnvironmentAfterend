@@ -15,10 +15,10 @@
         select id,gongweihao,shenhequyu,pinjiariqi,dixianyishi,zerenyishi,zhurenwengyishi,gaijinyishi,zongfen,jigefen from gongweizhiliangshengtaiyishizhuangtai where left(pinjiariqi,7) = #{date}
     </select>
 
-    <delete id="deleteGongWeiFuHeById">
-        delete from gongweifuhelv where id = #{id};
-        alter table gongweifuhelv drop id;
-        alter table gongweifuhelv add id bigint primary key not null auto_increment first;
+    <delete id="deleteGongWeiZhiLiangShengTaiYiShiById">
+        delete from gongweizhiliangshengtaiyishizhuangtai where id = #{id};
+        alter table gongweizhiliangshengtaiyishizhuangtai drop id;
+        alter table gongweizhiliangshengtaiyishizhuangtai add id bigint primary key not null auto_increment first;
     </delete>
 
     <select id="selectALLShengTaiYiShiData" resultType="com.poi.polo.GongWeiZhiLiangShengTaiYiShi">

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.poi.mapper.BianHuaDianDao">
+    <insert id="addBianHuaDian" parameterType="com.poi.polo.BianHuaDian"> <!-- select是reultType 代表返回值类型，而我是insert 不反回，所以是parameterType，代表参数类型 -->
+        insert into bianhuadian
+        (gongweiminchen,shenheriqi,shenhequyu,leixin,bianhuadianleirong,okornook) values
+        (#{gongWeiMinChen},#{shenHeRiQi},#{shenHeQuYu},#{leiXin},#{bianHuaDianLeiRong},#{okOrNoOk});
+        alter table bianhuadian drop id;
+        alter table bianhuadian add id bigint primary key not null auto_increment first;
+    </insert>
+
+    <select id="selectBianHuaDianByDate" resultType="com.poi.polo.BianHuaDian">
+        select id,gongweiminchen,shenheriqi,shenhequyu,leixin,bianhuadianleirong,okornook from bianhuadian where left(shenheriqi,7) = #{date}
+    </select>
+
+    <delete id="deleteBianHuaDianById">
+        delete from bianhuadian where id = #{id};
+        alter table bianhuadian drop id;
+        alter table bianhuadian add id bigint primary key not null auto_increment first;
+    </delete>
+
+    <select id="selectALLBianHuaDian" resultType="com.poi.polo.BianHuaDian">
+        select id,gongweiminchen,shenheriqi,shenhequyu,leixin,bianhuadianleirong,okornook from bianhuadian
+    </select>
+</mapper>

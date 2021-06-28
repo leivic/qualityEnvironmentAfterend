@@ -12,4 +12,6 @@ public interface GongWeiZhiLiangShengTaiYiShiDao {
     void addShengTaiYiShiData(GongWeiZhiLiangShengTaiYiShi gongWeiZhiLiangShengTaiYiShi);
 
     List<GongWeiZhiLiangShengTaiYiShi> selectShengTaiYiShiDataByDate(String date);
+
+    void deleteGongWeiZhiLiangShengTaiYiShiById(int id);
 }

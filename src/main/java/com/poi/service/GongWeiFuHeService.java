@@ -26,7 +26,7 @@ public class GongWeiFuHeService {
     };
 
     public List<GongWeiFuHe> selectAllGongWeiFuHe(int pageNum)throws Exception{
-        PageHelper.startPage(pageNum,7);//分页插件
+        PageHelper.startPage(pageNum,8);//分页插件
         return gongWeiFuHeDao.selectAllGongWeiFuHe();
     };
 }

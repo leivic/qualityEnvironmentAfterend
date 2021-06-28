@@ -19,7 +19,7 @@ public class UserService {
     };
 
     public List<Map<String,Object>> findAllUser(int pageNum)throws Exception{
-        PageHelper.startPage(pageNum,7);//pageHelper插件的核心代码 一个static方法 starPage
+        PageHelper.startPage(pageNum,8);//pageHelper插件的核心代码 一个static方法 starPage
         return userDao.findAllUser();
     }
 }

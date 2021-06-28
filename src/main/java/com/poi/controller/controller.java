@@ -55,6 +55,9 @@ public class controller {
     @Autowired
     private GongWeiZhiLiangShengTaiYiShiService gongWeiZhiLiangShengTaiYiShiService;
 
+    @Autowired
+    private BianHuaDianService bianHuaDianService;
+
     @RequestMapping("/testConnect")
     public String testConnect(){
 
@@ -520,6 +523,52 @@ public class controller {
         return gongWeiZhiLiangShengTaiYiShiService.selectShengTaiYiShiDataByDate(date);
     }
 
+    @RequestMapping("/deleteGongWeiZhiLiangShengTaiYiShiById")
+    void deleteGongWeiZhiLiangShengTaiYiShiById(int id){
+        gongWeiZhiLiangShengTaiYiShiService.deleteGongWeiZhiLiangShengTaiYiShiById(id);
+    }
 
+    @PostMapping("/exportBianHuaDian")
+    void exportBianHuaDian(@RequestParam("file") MultipartFile file) throws IOException{
+        FileInputStream fns=(FileInputStream)file.getInputStream();
+        XSSFWorkbook wb=new XSSFWorkbook(fns);//xssWorkbook少了hssworkbook的解析成 POIFSFileSystem数据类型这一步
+        XSSFSheet sheetAt = wb.getSheetAt(0);
+        if(sheetAt==null) {
+            return;
+        }
+
+        for(int rowIndex=0,num = 0;rowIndex<sheetAt.getLastRowNum();rowIndex++){    //循环每一行
+            XSSFCell cell = sheetAt.getRow(rowIndex).getCell(60);
+            if(cell.toString().length()==1){  //人 机 料 法  环
+                BianHuaDian bianHuaDian=new BianHuaDian();
+                bianHuaDian.setGongWeiMinChen(sheetAt.getRow(rowIndex).getCell(59).toString());
+                bianHuaDian.setShenHeRiQi(sheetAt.getRow(rowIndex).getCell(58).toString());
+                bianHuaDian.setShenHeQuYu(sheetAt.getRow(rowIndex).getCell(64).toString());
+                bianHuaDian.setLeiXin(sheetAt.getRow(rowIndex).getCell(60).toString());
+                bianHuaDian.setBianHuaDianLeiRong(sheetAt.getRow(rowIndex).getCell(61).toString());
+                bianHuaDian.setOkOrNoOk(sheetAt.getRow(rowIndex).getCell(63).toString());
+                bianHuaDianService.addBianHuaDian(bianHuaDian);//将赋值好的对象 作为参数传入bianHuaDianService 的addBianHuaDian 方法
+            }
+
+        }
+
+    }
+
+    @ResponseBody
+    @RequestMapping("/selectALLBianHuaDian")
+    List<BianHuaDian> selectALLBianHuaDian(int pageNum){
+        return bianHuaDianService.selectALLBianHuaDian(pageNum);
+    }
+
+    @ResponseBody
+    @RequestMapping("/selectBianHuaDianByDate")
+    List<BianHuaDian> selectBianHuaDianByDate(String date){
+        return bianHuaDianService.selectBianHuaDianByDate(date);
+    }
+
+    @RequestMapping("/deleteBianHuaDianById")
+    void deleteBianHuaDianById(int id){
+        bianHuaDianService.deleteBianHuaDianById(id);
+    }
 
     }

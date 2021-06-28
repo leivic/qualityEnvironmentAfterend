@@ -15,7 +15,7 @@ public class GongWeiZhiLiangShengTaiYiShiService {
     private GongWeiZhiLiangShengTaiYiShiDao gongWeiZhiLiangShengTaiYiShiDao;
 
     public List<GongWeiZhiLiangShengTaiYiShi>selectALLShengTaiYiShiData(int pageNum){
-        PageHelper.startPage(pageNum,7);//分页插件
+        PageHelper.startPage(pageNum,8);//分页插件
       return gongWeiZhiLiangShengTaiYiShiDao.selectALLShengTaiYiShiData();
     };
 
@@ -25,5 +25,9 @@ public class GongWeiZhiLiangShengTaiYiShiService {
 
     public List<GongWeiZhiLiangShengTaiYiShi> selectShengTaiYiShiDataByDate(String date){
       return gongWeiZhiLiangShengTaiYiShiDao.selectShengTaiYiShiDataByDate(date);
+    };
+
+    public void deleteGongWeiZhiLiangShengTaiYiShiById(int id){
+        gongWeiZhiLiangShengTaiYiShiDao.deleteGongWeiZhiLiangShengTaiYiShiById(id);
     };
 }
