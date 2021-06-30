@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.poi.Security.utils.Response;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -571,4 +572,35 @@ public class controller {
         bianHuaDianService.deleteBianHuaDianById(id);
     }
 
+    @RequestMapping("/getBianHuaDianSecondData")
+    BianHuaDianSecondData[] getBianHuaDianSecondData(String date){
+        System.out.println(bianHuaDianService.selectBianHuaDianByDate(date));
+        List<BianHuaDian> test =bianHuaDianService.selectBianHuaDianByDate(date);
+
+        List<String> fenLeiYiJu=test.stream().map(BianHuaDian::getShenHeQuYu).distinct().collect(Collectors.toList());//得到去重后的审核日期 集合
+
+        BianHuaDianSecondData[] bianHuaDianSecondData=new BianHuaDianSecondData[fenLeiYiJu.size()];// 新建一个 对象数组
+        DecimalFormat df=new DecimalFormat("0.00");//设置保留位数
+        for (int i = 0; i <fenLeiYiJu.size() ; i++) {
+            final int d=i;
+
+            List<BianHuaDian> filterBianHua=test.stream().filter(bianHuaDian -> bianHuaDian.getShenHeQuYu().equals(fenLeiYiJu.get(d))).collect(Collectors.toList());//过滤出  以审核区域为分类依据的几个集合
+            System.out.println(filterBianHua);
+            List<BianHuaDian> filterBianHuaOk=filterBianHua.stream().filter(bianHuaDian -> bianHuaDian.getOkOrNoOk().equals("OK")).collect(Collectors.toList());//再过滤出 以审核区域为分类依据的几个集合中的 值为OK的集合
+            System.out.println("OK"+filterBianHuaOk);
+
+
+
+
+            String percentage=df.format((float)filterBianHuaOk.size()/filterBianHua.size());
+            System.out.println("分辨率为"+percentage);
+
+            BianHuaDianSecondData bianHuaDianSecondData1=new BianHuaDianSecondData();
+            bianHuaDianSecondData1.setFenLeiYiJu(fenLeiYiJu.get(d));
+            bianHuaDianSecondData1.setPercentage(percentage);
+            bianHuaDianSecondData[i]=bianHuaDianSecondData1;
+        }
+        System.out.println(bianHuaDianSecondData);
+        return bianHuaDianSecondData;
+    }
     }
