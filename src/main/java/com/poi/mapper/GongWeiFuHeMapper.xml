@@ -22,6 +22,6 @@
     </delete>
 
     <select id="selectAllGongWeiFuHe" resultType="com.poi.polo.GongWeiFuHe">
-        select id,assignmentid,workmodel,itemdescription,zipingorchoucha,Review,stationname,applicableterms,meettheterms,stationpercentage,auditquestions,pinshenquyu,pinshenshijian,yinshenrenyuan from gongweifuhelv
+        select id,assignmentid,workmodel,itemdescription,zipingorchoucha,Review,stationname,applicableterms,meettheterms,stationpercentage,auditquestions,pinshenquyu,pinshenshijian,yinshenrenyuan from gongweifuhelv order by id desc
     </select>
 </mapper>

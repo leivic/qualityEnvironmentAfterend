@@ -12,7 +12,7 @@
     </insert>
 
     <select id="selectAllGuoChenFuHe" resultType="com.poi.polo.GuoChenFuHe">
-        select id,assignmentid,workmodel,itemdescription,zipinorchoucha,Review,guochenminchen,guochenpeifen,guochendefen,guochenpercentage,auditquestions,pinshenquyu,pinshenshijian,yinshenrenyuan from guochenfuhelv
+        select id,assignmentid,workmodel,itemdescription,zipinorchoucha,Review,guochenminchen,guochenpeifen,guochendefen,guochenpercentage,auditquestions,pinshenquyu,pinshenshijian,yinshenrenyuan from guochenfuhelv order by id desc
     </select>
 
     <select id="selectGuoChenFuHeListByDate" resultType="com.poi.polo.GuoChenFuHe">

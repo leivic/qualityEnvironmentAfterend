@@ -22,6 +22,6 @@
     </delete>
 
     <select id="selectALLBianHuaDian" resultType="com.poi.polo.BianHuaDian">
-        select id,gongweiminchen,shenheriqi,shenhequyu,leixin,bianhuadianleirong,okornook from bianhuadian
+        select id,gongweiminchen,shenheriqi,shenhequyu,leixin,bianhuadianleirong,okornook from bianhuadian order by id desc
     </select>
 </mapper>

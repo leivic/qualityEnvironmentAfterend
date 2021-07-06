@@ -22,6 +22,6 @@
     </delete>
 
     <select id="selectALLShengTaiYiShiData" resultType="com.poi.polo.GongWeiZhiLiangShengTaiYiShi">
-        select id,gongweihao,shenhequyu,pinjiariqi,dixianyishi,zerenyishi,zhurenwengyishi,gaijinyishi,zongfen,jigefen from gongweizhiliangshengtaiyishizhuangtai
+        select id,gongweihao,shenhequyu,pinjiariqi,dixianyishi,zerenyishi,zhurenwengyishi,gaijinyishi,zongfen,jigefen from gongweizhiliangshengtaiyishizhuangtai order by id desc
     </select>
 </mapper>

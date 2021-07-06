@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.poi.mapper.GongWeiFuGaiLvDao">
+    <insert id="addFuGaiLV" parameterType="com.poi.polo.GongWeiFuGaiLv"> <!-- select是reultType 代表返回值类型，而我是insert 不反回，所以是parameterType，代表参数类型 -->
+        insert into gongweifugailv
+        (jiancegongwei,quyu,jianceshijian)
+        select #{jianCeGongWei},#{quYu},#{jianCeShiJian} from dual
+        where not exists (
+        select jiancegongwei,jianceshijian from gongweifugailv where jiancegongwei = #{jianCeGongWei} and left(jianceshijian,4) = left (#{jianCeShiJian},4)
+        );
+        <!--一年内的重复工位不插进表里面 -->
+        alter table gongweifugailv drop id;
+        alter table gongweifugailv add id bigint primary key not null auto_increment first;
+    </insert>
+    <select id="selectAllGongWeiFuGaiLv" resultType="com.poi.polo.GongWeiFuGaiLv">
+        select id,jiancegongwei,quyu,jianceshijian from gongweifugailv order by id desc
+    </select>
+
+    <select id="selectGongWeiFuGaiLvByYear" resultType="com.poi.polo.GongWeiFuGaiLv">
+        select id,jiancegongwei,quyu,jianceshijian from gongweifugailv where  left (jianceshijian,4)=#{year}
+    </select>
+
+     <delete id="">
+
+     </delete>
+</mapper>

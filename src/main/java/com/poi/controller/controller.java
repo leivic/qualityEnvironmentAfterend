@@ -59,6 +59,12 @@ public class controller {
     @Autowired
     private BianHuaDianService bianHuaDianService;
 
+    @Autowired
+    private GongWeiFuGaiLvService gongWeiFuGaiLvService;
+
+    @Autowired
+    private GongWeiFuGaiLvZongGongWeiShuService gongWeiFuGaiLvZongGongWeiShuService;
+
     @RequestMapping("/testConnect")
     public String testConnect(){
 
@@ -603,4 +609,58 @@ public class controller {
         System.out.println(bianHuaDianSecondData);
         return bianHuaDianSecondData;
     }
+    /*
+    * 下面是对工位覆盖率的处理
+    *
+    *
+    * */
+     @PostMapping("/exportGongWeiFuGaiLv")
+     public void exportGongWeiFuGaiLv(@RequestParam("file") MultipartFile file)throws IOException{
+         FileInputStream fns=(FileInputStream)file.getInputStream();
+         XSSFWorkbook wb=new XSSFWorkbook(fns);//xssWorkbook少了hssworkbook的解析成 POIFSFileSystem数据类型这一步
+         XSSFSheet sheetAt = wb.getSheetAt(0);
+         if(sheetAt==null) {
+             return;
+         }
+
+
+         for(int rowIndex=1,num = 0;rowIndex<sheetAt.getLastRowNum();rowIndex++){    //循环除了标题外每一行
+             XSSFCell cell = sheetAt.getRow(rowIndex).getCell(52);//excel意识的区域那一行 从第二行开始 不等于空
+             if(cell.toString()!=""){
+                GongWeiFuGaiLv gongWeiFuGaiLv=new GongWeiFuGaiLv();
+                gongWeiFuGaiLv.setJianCeGongWei(sheetAt.getRow(rowIndex).getCell(53).toString());
+                gongWeiFuGaiLv.setQuYu(sheetAt.getRow(rowIndex).getCell(52).toString());
+                gongWeiFuGaiLv.setJianCeShiJian(sheetAt.getRow(rowIndex).getCell(51).toString());
+
+                gongWeiFuGaiLvService.addFuGaiLV(gongWeiFuGaiLv);//将本行数据添加入数据库 防重复添加
+             }
+         }
+     }
+
+        @RequestMapping("/selectAllGongWeiFuGaiLv")
+        public List<GongWeiFuGaiLv> selectAllGongWeiFuGaiLv(int pageNum){ //这个pageNum是这个方法里的形参
+                return gongWeiFuGaiLvService.selectAllGongWeiFuGaiLv(pageNum);//查找所有工位符合率信息 这个方法里的pageNum形参传到调用方法里面作为实参
+        }
+
+
+        @RequestMapping("/getGongWeiFuGaiLvSecondDataByYear")
+        public List<GongWeiFuGaiLvSecondData> getGongWeiFuGaiLvSecondDataByYear(String year){
+            System.out.println(gongWeiFuGaiLvZongGongWeiShuService.selecAll());
+            List<GongWeiFuGaiLVZongGongWeiShu> list1=gongWeiFuGaiLvZongGongWeiShuService.selecAll();
+            int zongshu=list1.get(0).getGongWeiShu()+list1.get(1).getGongWeiShu()+list1.get(2).getGongWeiShu()+list1.get(3).getGongWeiShu()+list1.get(4).getGongWeiShu()+list1.get(5).getGongWeiShu();
+            System.out.println(zongshu);
+            //上述获得总工位数  有了总工位数 set set那个seconddata 总数 月份设置为总数 概率设置为100% 就获得了一个seconddata的对象 然后后面将所有对象添加进list
+
+
+
+            List<GongWeiFuGaiLvSecondData> list=new ArrayList();
+
+            return list;
+        }
+
+
+        @RequestMapping("/selectAllGongWeiShu")
+        public List<GongWeiFuGaiLVZongGongWeiShu> selectAllGongWeiShu(){
+         return gongWeiFuGaiLvZongGongWeiShuService.selecAll();
+        }
     }
