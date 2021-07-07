@@ -28,6 +28,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -650,12 +651,86 @@ public class controller {
             int zongshu=list1.get(0).getGongWeiShu()+list1.get(1).getGongWeiShu()+list1.get(2).getGongWeiShu()+list1.get(3).getGongWeiShu()+list1.get(4).getGongWeiShu()+list1.get(5).getGongWeiShu();
             System.out.println(zongshu);
             //上述获得总工位数  有了总工位数 set set那个seconddata 总数 月份设置为总数 概率设置为100% 就获得了一个seconddata的对象 然后后面将所有对象添加进list
+            List<GongWeiFuGaiLvSecondData> list=new ArrayList() ;
+
+            GongWeiFuGaiLvSecondData gongWeiFuGaiLvSecondData=new GongWeiFuGaiLvSecondData();//创建一个对象
+            gongWeiFuGaiLvSecondData.setYuefen("总数");//定义对象月份
+            gongWeiFuGaiLvSecondData.setShuLiang(String.valueOf(zongshu));//定义对象总数
+            gongWeiFuGaiLvSecondData.setGaiLv(100);//定义对象概率
+            list.add(0,gongWeiFuGaiLvSecondData);//将这个定义好的对象添加进集合  之前写的是LIST.SET 没用add 报错 因为你没有值的list是空集合 set会报数组取值错误
+            System.out.println("测试概率是="+546/1800);//看一下算出来的概率是多少  这是java 1/2=0的问题 两个int类型相除 结果也是int类型 0.5的int强转为0 所以要写double c＝(double)c/
+
+
+            Calendar now=Calendar.getInstance();
+            System.out.println(now.get(Calendar.MONTH)+1);//得到当前月份的值 下方的i只循环到当前月
+
+
+            if(String.valueOf(now.get(Calendar.YEAR)).equals(year)){  //数据类型转换 前面是int转String year本来就是String类型
+                int nowMonth=(now.get(Calendar.MONTH))+1;
+                for (int i=1,shuliang=0;i<=nowMonth;i++){//循环1月到当前月 不然后面还没到的月也有值
+                    GongWeiFuGaiLvSecondData gongWeiFuGaiLvSecondData1=new GongWeiFuGaiLvSecondData();
+
+                    if (i<10){
+                        String yueFen="0"+String.valueOf(i);//造一个传入后面方法的参数出来 后面的方法需要的参数是两位 而不是一位
+                        int benyueshuliang=gongWeiFuGaiLvService.selectGongWeiShuByYueFen(year,yueFen);//这里可不是定义方法时候的形参 是传实参进去了 获得数量
+                        System.out.println(i+"月数量是"+benyueshuliang);//看一下查出来每个月是多少个
+                        shuliang=benyueshuliang+shuliang;//因为每月数量不是特定的 是递增的 所以要把本月数量加上上月积累的数量 成为总数量
+
+
+                        gongWeiFuGaiLvSecondData1.setYuefen(yueFen);
+                        gongWeiFuGaiLvSecondData1.setShuLiang(String.valueOf(shuliang));
+                        gongWeiFuGaiLvSecondData1.setGaiLv( ((double)shuliang/zongshu)*100);//String.format格式 Double.parseDouble转化为double类型 *100是避免数字太小时  被java截为0
+                        list.add(i,gongWeiFuGaiLvSecondData1);
+                    }
+                    else{
+                        String yueFen=String.valueOf(i);//造一个传入后面方法的参数出来 后面的方法需要的参数是两位 而不是一位
+                        int benyueshuliang=gongWeiFuGaiLvService.selectGongWeiShuByYueFen(year,yueFen);//这里可不是定义方法时候的形参 是传实参进去了 获得数量
+                        shuliang=benyueshuliang+shuliang;//因为每月数量不是特定的 是递增的 所以要把本月数量加上上月积累的数量 成为总数量
+
+                        gongWeiFuGaiLvSecondData1.setYuefen(yueFen);
+                        gongWeiFuGaiLvSecondData1.setShuLiang(String.valueOf(shuliang));
+                        gongWeiFuGaiLvSecondData1.setGaiLv( ((double)shuliang/zongshu)*100); //不能int类型相除  要强转为double类型相除
+                        list.add(i,gongWeiFuGaiLvSecondData1);
+                    }
+
+                }
+            }
+            else{  //else的两段代码完全一样 只是nowMonth的不同赋值方法而已
+                int nowMonth=12;
+                for (int i=1,shuliang=0;i<nowMonth+1;i++){//循环1月到当前月 不然后面还没到的月也有值
+                    GongWeiFuGaiLvSecondData gongWeiFuGaiLvSecondData1=new GongWeiFuGaiLvSecondData();
+
+                    if (i<10){
+                        String yueFen="0"+String.valueOf(i);//造一个传入后面方法的参数出来 后面的方法需要的参数是两位 而不是一位
+                        int benyueshuliang=gongWeiFuGaiLvService.selectGongWeiShuByYueFen(year,yueFen);//这里可不是定义方法时候的形参 是传实参进去了 获得数量
+                        System.out.println(i+"月数量是"+benyueshuliang);//看一下查出来每个月是多少个
+                        shuliang=benyueshuliang+shuliang;//因为每月数量不是特定的 是递增的 所以要把本月数量加上上月积累的数量 成为总数量
+
+
+                        gongWeiFuGaiLvSecondData1.setYuefen(yueFen);
+                        gongWeiFuGaiLvSecondData1.setShuLiang(String.valueOf(shuliang));
+                        gongWeiFuGaiLvSecondData1.setGaiLv( ((double)shuliang/zongshu)*100);//String.format格式 Double.parseDouble转化为double类型 *100是避免数字太小时  被java截为0
+                        list.add(i,gongWeiFuGaiLvSecondData1);
+                    }
+                    else{
+                        String yueFen=String.valueOf(i);//造一个传入后面方法的参数出来 后面的方法需要的参数是两位 而不是一位
+                        int benyueshuliang=gongWeiFuGaiLvService.selectGongWeiShuByYueFen(year,yueFen);//这里可不是定义方法时候的形参 是传实参进去了 获得数量
+                        shuliang=benyueshuliang+shuliang;//因为每月数量不是特定的 是递增的 所以要把本月数量加上上月积累的数量 成为总数量
+
+                        gongWeiFuGaiLvSecondData1.setYuefen(yueFen);
+                        gongWeiFuGaiLvSecondData1.setShuLiang(String.valueOf(shuliang));
+                        gongWeiFuGaiLvSecondData1.setGaiLv( ((double)shuliang/zongshu)*100); //不能int类型相除  要强转为double类型相除
+                        list.add(i,gongWeiFuGaiLvSecondData1);
+                    }
+
+                }
+            }
 
 
 
-            List<GongWeiFuGaiLvSecondData> list=new ArrayList();
 
-            return list;
+            System.out.println(list);
+            return list;//前面已经将集合赋值完毕 返回集合给前端
         }
 
 

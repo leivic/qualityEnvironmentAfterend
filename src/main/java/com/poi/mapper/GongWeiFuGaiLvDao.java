@@ -2,6 +2,7 @@ package com.poi.mapper;
 
 import com.poi.polo.GongWeiFuGaiLv;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -16,5 +17,5 @@ public interface GongWeiFuGaiLvDao {
 
     List<GongWeiFuGaiLv> SelectGongWeiFUGaiLvByQuyu(String quYu,String year);//按区域和年份选择工位
 
-
+    int selectGongWeiShuByYueFen(@Param("year")String year, @Param("yueFen")String yueFen);//select count 按年份和月份查找 查出特定月份的个数
 }

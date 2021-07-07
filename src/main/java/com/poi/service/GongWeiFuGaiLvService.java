@@ -26,4 +26,8 @@ public class GongWeiFuGaiLvService {
     public List<GongWeiFuGaiLv> selectGongWeiFuGaiLvByYear(String year){
         return gongWeiFuGaiLvDao.selectGongWeiFuGaiLvByYear(year);//按年份选出该年的 不会重复的所有数据
     };
+
+    public int selectGongWeiShuByYueFen(String year,String yueFen){
+        return gongWeiFuGaiLvDao.selectGongWeiShuByYueFen(year,yueFen);
+    }
 }

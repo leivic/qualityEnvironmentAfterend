@@ -25,4 +25,9 @@
      <delete id="">
 
      </delete>
+
+    <select id="selectGongWeiShuByYueFen" resultType="java.lang.Integer" parameterType="String"><!--不管什么查询 都必须返回resultType或resultMap的值 否则就会报错-->
+        select count(id) from gongweifugailv where left(jianceshijian,4)=#{year} and substring(jianceshijian,6,2)=#{yueFen} ;
+        <!--考虑到后面使用时 传参是年份和月份分开传 所以这里的年份和月份也要分开-->  <!--根据年月判断特定月份的已检测工位数-->
+    </select>
 </mapper>
