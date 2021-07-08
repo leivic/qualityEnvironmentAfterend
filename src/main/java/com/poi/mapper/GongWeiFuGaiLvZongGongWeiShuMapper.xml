@@ -8,4 +8,11 @@
         select id,quyu,gongweishu from gongweifugailvzonggongweishu
     </select>
 
+    <select id="selectByQuYu" resultType="com.poi.polo.GongWeiFuGaiLVZongGongWeiShu">
+        select id,quyu,gongweishu from gongweifugailvzonggongweishu where quyu=#{quYu}
+    </select>
+
+    <update id="change">
+        update gongweifugailvzonggongweishu set gongweishu = #{shuliang} where  quyu=#{quYu}
+    </update>
 </mapper>

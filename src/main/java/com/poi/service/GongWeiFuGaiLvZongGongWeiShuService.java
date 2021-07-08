@@ -15,4 +15,12 @@ public class GongWeiFuGaiLvZongGongWeiShuService {
     public List<GongWeiFuGaiLVZongGongWeiShu> selecAll(){
         return gongWeiFuGaiLvZongGongWeiShuDao.selectAll();
     }
+
+    public List<GongWeiFuGaiLVZongGongWeiShu> selectByQuYu(String quYu){
+        return  gongWeiFuGaiLvZongGongWeiShuDao.selectByQuYu(quYu);
+    }
+
+    public void change(String quYu,String shuliang){
+        gongWeiFuGaiLvZongGongWeiShuDao.change(quYu,shuliang);//根据区域 改变到传入的数量
+    }
 }

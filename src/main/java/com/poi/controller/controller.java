@@ -726,16 +726,36 @@ public class controller {
                 }
             }
 
-
-
-
             System.out.println(list);
             return list;//前面已经将集合赋值完毕 返回集合给前端
         }
+
+        @RequestMapping("/getGongWeiFuGaiLvSecondDataByYearAndQuYu")
+        public List<GongWeiFuGaiLvSecondData> getGongWeiFuGaiLvSecondDataByYearAndQuYu(String quYu,String year){
+            System.out.println(gongWeiFuGaiLvZongGongWeiShuService.selectByQuYu(quYu).get(0).getGongWeiShu());// 获得该区域工位总数 selectByQuYu得到的是一个List集合 集合取对象 对象取字段 取得总数
+            int zongshu=gongWeiFuGaiLvZongGongWeiShuService.selectByQuYu(quYu).get(0).getGongWeiShu();
+            List<GongWeiFuGaiLvSecondData> list=new ArrayList() ;
+            GongWeiFuGaiLvSecondData gongWeiFuGaiLvSecondData=new GongWeiFuGaiLvSecondData();//创建一个对象
+            gongWeiFuGaiLvSecondData.setYuefen("总数");//定义对象月份
+            gongWeiFuGaiLvSecondData.setShuLiang(String.valueOf(zongshu));//定义对象总数
+            gongWeiFuGaiLvSecondData.setGaiLv(100);//定义对象概率
+            list.add(0,gongWeiFuGaiLvSecondData);//将这个定义好的对象添加进集合  之前写的是LIST.SET 没用add 报错 因为你没有值的list是空集合 set会报数组取值错误
+
+
+
+         return list;
+        }
+
+
 
 
         @RequestMapping("/selectAllGongWeiShu")
         public List<GongWeiFuGaiLVZongGongWeiShu> selectAllGongWeiShu(){
          return gongWeiFuGaiLvZongGongWeiShuService.selecAll();
+        }
+
+        @RequestMapping("/changeGongWeiShu")
+        public void changeGongWeiShu(String quYu,String shuliang){
+         gongWeiFuGaiLvZongGongWeiShuService.change(quYu,shuliang);
         }
     }
