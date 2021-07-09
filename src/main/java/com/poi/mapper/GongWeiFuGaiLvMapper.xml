@@ -30,4 +30,8 @@
         select count(id) from gongweifugailv where left(jianceshijian,4)=#{year} and substring(jianceshijian,6,2)=#{yueFen} ;
         <!--考虑到后面使用时 传参是年份和月份分开传 所以这里的年份和月份也要分开-->  <!--根据年月判断特定月份的已检测工位数-->
     </select>
+
+    <select id="SelectGongWeiFUGaiLvByQuyu" resultType="java.lang.Integer" parameterType="String" >
+        select count(id) from gongweifugailv where left(jianceshijian,4)=#{year} and substring(jianceshijian,6,2)=#{yueFen} and quyu=#{quYu}
+    </select>
 </mapper>

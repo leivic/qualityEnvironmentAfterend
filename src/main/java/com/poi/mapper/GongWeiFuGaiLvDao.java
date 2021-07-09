@@ -15,7 +15,9 @@ public interface GongWeiFuGaiLvDao {
 
     List<GongWeiFuGaiLv> selectAllGongWeiFuGaiLv();//选择所有工位数据
 
-    List<GongWeiFuGaiLv> SelectGongWeiFUGaiLvByQuyu(String quYu,String year);//按区域和年份选择工位
+    int SelectGongWeiFUGaiLvByQuyu(@Param("quYu")String quYu,@Param("yueFen")String yueFen,@Param("year")String year);//按区域和年份和月份选择工位
 
     int selectGongWeiShuByYueFen(@Param("year")String year, @Param("yueFen")String yueFen);//select count 按年份和月份查找 查出特定月份的个数
+
+
 }

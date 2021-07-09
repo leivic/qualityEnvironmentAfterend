@@ -30,4 +30,8 @@ public class GongWeiFuGaiLvService {
     public int selectGongWeiShuByYueFen(String year,String yueFen){
         return gongWeiFuGaiLvDao.selectGongWeiShuByYueFen(year,yueFen);
     }
+
+     public int SelectGongWeiFUGaiLvByQuyu(String year,String yueFen,String quYu){
+        return gongWeiFuGaiLvDao.SelectGongWeiFUGaiLvByQuyu(quYu,yueFen,year);
+     }
 }

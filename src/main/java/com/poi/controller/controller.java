@@ -741,6 +741,67 @@ public class controller {
             gongWeiFuGaiLvSecondData.setGaiLv(100);//定义对象概率
             list.add(0,gongWeiFuGaiLvSecondData);//将这个定义好的对象添加进集合  之前写的是LIST.SET 没用add 报错 因为你没有值的list是空集合 set会报数组取值错误
 
+            Calendar now=Calendar.getInstance();
+            System.out.println(now.get(Calendar.MONTH)+1);//得到当前月份的值 下方的i只循环到当前月
+            if(String.valueOf(now.get(Calendar.YEAR)).equals(year)){//如果是本年的数据
+                int nowMonth=(now.get(Calendar.MONTH))+1;
+                for (int i=1,shuliang=0;i<=nowMonth;i++){//循环到当前月份
+                    GongWeiFuGaiLvSecondData gongWeiFuGaiLvSecondData1=new GongWeiFuGaiLvSecondData();//造一个待会儿要用来加入集合的对象 每次循环有一个对象 所以要在循环里面建
+                    if(i<10){
+                        String yueFen="0"+String.valueOf(i);//造一个传入后面方法的参数出来 后面的方法需要的参数是两位 而不是一位
+                        int benyueshuliang=gongWeiFuGaiLvService.SelectGongWeiFUGaiLvByQuyu(year,yueFen,quYu);//这里可不是定义方法时候的形参 是传实参进去了 获得数量
+                        System.out.println(i+"月数量是"+benyueshuliang);//看一下查出来每个月是多少个
+                        shuliang=benyueshuliang+shuliang;//因为每月数量不是特定的 是递增的 所以要把本月数量加上上月积累的数量 成为总数量
+
+
+                        gongWeiFuGaiLvSecondData1.setYuefen(yueFen);
+                        gongWeiFuGaiLvSecondData1.setShuLiang(String.valueOf(shuliang));
+                        gongWeiFuGaiLvSecondData1.setGaiLv( ((double)shuliang/zongshu)*100);//String.format格式 Double.parseDouble转化为double类型 *100是避免数字太小时  被java截为0
+                        list.add(i,gongWeiFuGaiLvSecondData1);
+                    }
+                    else{
+                        String yueFen=String.valueOf(i);//造一个传入后面方法的参数出来 后面的方法需要的参数是两位 而不是一位
+                        int benyueshuliang=gongWeiFuGaiLvService.SelectGongWeiFUGaiLvByQuyu(year,yueFen,quYu);//这里可不是定义方法时候的形参 是传实参进去了 获得数量
+                        shuliang=benyueshuliang+shuliang;//因为每月数量不是特定的 是递增的 所以要把本月数量加上上月积累的数量 成为总数量
+
+                        gongWeiFuGaiLvSecondData1.setYuefen(yueFen);
+                        gongWeiFuGaiLvSecondData1.setShuLiang(String.valueOf(shuliang));
+                        gongWeiFuGaiLvSecondData1.setGaiLv( ((double)shuliang/zongshu)*100); //不能int类型相除  要强转为double类型相除
+                        list.add(i,gongWeiFuGaiLvSecondData1);
+                    }
+                }
+            }
+            else {
+                int nowMonth=12;
+                for (int i=1,shuliang=0;i<nowMonth+1;i++){//循环1月到当前月 不然后面还没到的月也有值
+                    GongWeiFuGaiLvSecondData gongWeiFuGaiLvSecondData1=new GongWeiFuGaiLvSecondData();
+
+                    if (i<10){
+                        String yueFen="0"+String.valueOf(i);//造一个传入后面方法的参数出来 后面的方法需要的参数是两位 而不是一位
+                        int benyueshuliang=gongWeiFuGaiLvService.SelectGongWeiFUGaiLvByQuyu(year,yueFen,quYu);//这里可不是定义方法时候的形参 是传实参进去了 获得数量
+                        System.out.println(i+"月数量是"+benyueshuliang);//看一下查出来每个月是多少个
+                        shuliang=benyueshuliang+shuliang;//因为每月数量不是特定的 是递增的 所以要把本月数量加上上月积累的数量 成为总数量
+
+
+                        gongWeiFuGaiLvSecondData1.setYuefen(yueFen);
+                        gongWeiFuGaiLvSecondData1.setShuLiang(String.valueOf(shuliang));
+                        gongWeiFuGaiLvSecondData1.setGaiLv( ((double)shuliang/zongshu)*100);//String.format格式 Double.parseDouble转化为double类型 *100是避免数字太小时  被java截为0
+                        list.add(i,gongWeiFuGaiLvSecondData1);
+                    }
+                    else{
+                        String yueFen=String.valueOf(i);//造一个传入后面方法的参数出来 后面的方法需要的参数是两位 而不是一位
+                        int benyueshuliang=gongWeiFuGaiLvService.SelectGongWeiFUGaiLvByQuyu(year,yueFen,quYu);//这里可不是定义方法时候的形参 是传实参进去了 获得数量
+                        shuliang=benyueshuliang+shuliang;//因为每月数量不是特定的 是递增的 所以要把本月数量加上上月积累的数量 成为总数量
+
+                        gongWeiFuGaiLvSecondData1.setYuefen(yueFen);
+                        gongWeiFuGaiLvSecondData1.setShuLiang(String.valueOf(shuliang));
+                        gongWeiFuGaiLvSecondData1.setGaiLv( ((double)shuliang/zongshu)*100); //不能int类型相除  要强转为double类型相除
+                        list.add(i,gongWeiFuGaiLvSecondData1);
+                    }
+
+                }
+            }
+
 
 
          return list;
