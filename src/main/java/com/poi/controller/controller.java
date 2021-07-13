@@ -66,6 +66,9 @@ public class controller {
     @Autowired
     private GongWeiFuGaiLvZongGongWeiShuService gongWeiFuGaiLvZongGongWeiShuService;
 
+    @Autowired
+    private WenTiQinDanService wenTiQinDanService;
+
     @RequestMapping("/testConnect")
     public String testConnect(){
 
@@ -334,7 +337,7 @@ public class controller {
 
 
         GuoChenFuHe[] guoChenFuHes =new GuoChenFuHe[number];//创建对象数组
-        for(int rowIndex=0,num = 0;rowIndex<sheetAt.getLastRowNum();rowIndex++){
+        for(int rowIndex=0,num = 0;rowIndex<=sheetAt.getLastRowNum();rowIndex++){
             XSSFCell reviewCell = sheetAt.getRow(rowIndex).getCell(20);
             if (reviewCell.toString().equals("工位")){////循环第20列  如果第二十列是工位 再判断后面是过程符合率 还是工位符合率 此处注意.equal()和==的区别
                 XSSFCell cell = sheetAt.getRow(rowIndex).getCell(38);
@@ -496,7 +499,7 @@ public class controller {
 
          //由此得到 应该创建一个多大的对象数组
 
-         for(int rowIndex=0,num = 0;rowIndex<sheetAt.getLastRowNum();rowIndex++){
+         for(int rowIndex=0,num = 0;rowIndex<=sheetAt.getLastRowNum();rowIndex++){
              XSSFCell cell = sheetAt.getRow(rowIndex).getCell(52);//先循环每一行 看区域的那个单元格不为空 再取当前这行做处理
              if (cell.toString().length()>2){ //小于2截取字符串会报错
                  if(cell.toString().substring(cell.toString().length()-2,cell.toString().length()).equals("车间")){//如果字符串最后两位＝"车间"
@@ -545,7 +548,7 @@ public class controller {
             return;
         }
 
-        for(int rowIndex=0,num = 0;rowIndex<sheetAt.getLastRowNum();rowIndex++){    //循环每一行
+        for(int rowIndex=0,num = 0;rowIndex<=sheetAt.getLastRowNum();rowIndex++){    //循环每一行
             XSSFCell cell = sheetAt.getRow(rowIndex).getCell(60);
             if(cell.toString().length()==1){  //人 机 料 法  环
                 BianHuaDian bianHuaDian=new BianHuaDian();
@@ -625,7 +628,7 @@ public class controller {
          }
 
 
-         for(int rowIndex=1,num = 0;rowIndex<sheetAt.getLastRowNum();rowIndex++){    //循环除了标题外每一行
+         for(int rowIndex=1,num = 0;rowIndex<=sheetAt.getLastRowNum();rowIndex++){    //循环除了标题外每一行
              XSSFCell cell = sheetAt.getRow(rowIndex).getCell(52);//excel意识的区域那一行 从第二行开始 不等于空
              if(cell.toString()!=""){
                 GongWeiFuGaiLv gongWeiFuGaiLv=new GongWeiFuGaiLv();
@@ -818,5 +821,47 @@ public class controller {
         @RequestMapping("/changeGongWeiShu")
         public void changeGongWeiShu(String quYu,String shuliang){
          gongWeiFuGaiLvZongGongWeiShuService.change(quYu,shuliang);
+        }
+
+        @PostMapping("/exportWenTiQinDan")
+        public void exportWenTiQinDan(@RequestParam("file") MultipartFile file) throws IOException{
+            FileInputStream fns=(FileInputStream)file.getInputStream();
+            XSSFWorkbook wb=new XSSFWorkbook(fns);//xssWorkbook少了hssworkbook的解析成 POIFSFileSystem数据类型这一步
+            XSSFSheet sheetAt = wb.getSheetAt(0);
+            if(sheetAt==null) {
+                return;
+            }
+            System.out.println(sheetAt.getLastRowNum());
+            for(int rowIndex=1;rowIndex<=sheetAt.getLastRowNum();rowIndex++){ //这里第一次执行报了一个空指针异常的错误 .. 最后发现原因是sevice层里没有autowired
+                WenTiQinDan wenTiQinDan=new WenTiQinDan();
+                wenTiQinDan.setQuYu(sheetAt.getRow(rowIndex).getCell(1).toString());
+                wenTiQinDan.setBianHuaDian(sheetAt.getRow(rowIndex).getCell(2).toString());
+                wenTiQinDan.setWenTiMiaoShu(sheetAt.getRow(rowIndex).getCell(3).toString());
+                wenTiQinDan.setYuanYinFenXi(sheetAt.getRow(rowIndex).getCell(4).toString());
+                wenTiQinDan.setGaiJinCuoShi(sheetAt.getRow(rowIndex).getCell(5).toString());
+                wenTiQinDan.setDate(sheetAt.getRow(rowIndex).getCell(6).toString());
+                wenTiQinDan.setJiHuaWanChenRiQi(sheetAt.getRow(rowIndex).getCell(7).toString());
+                wenTiQinDan.setZhuangTai(sheetAt.getRow(rowIndex).getCell(8).toString());
+                wenTiQinDan.setFuZeRen(sheetAt.getRow(rowIndex).getCell(9).toString());
+                System.out.println(wenTiQinDan);
+                wenTiQinDanService.addWenTi(wenTiQinDan);//空指针异常 很有可能加入的某条数据是空的
+            }
+
+
+        }
+
+        @RequestMapping("/selectAllWenTiQinDan")
+        public List<WenTiQinDan> selectAllWenTiQinDan(int pageNum){
+             return wenTiQinDanService.selectALLWenTi(pageNum);
+        };
+
+        @RequestMapping("/selectWenTiQinDanByDate")
+        public List<WenTiQinDan> selectWenTiQinDanByDate(int pageNum,String date){
+            return wenTiQinDanService.selectWenTiByDate(date,pageNum);
+        }
+
+        @RequestMapping("/changeZhuangTai")
+        public void changeZhuangTai(String id,String zhuangtai){
+            wenTiQinDanService.changeZhuangTai(id,zhuangtai);
         }
     }
