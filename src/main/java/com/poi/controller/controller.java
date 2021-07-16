@@ -69,6 +69,12 @@ public class controller {
     @Autowired
     private WenTiQinDanService wenTiQinDanService;
 
+    @Autowired
+    private WenJianXiuDinJiHuaService wenJianXiuDinJiHuaService;
+
+    @Autowired
+    private WenJianXiuDinService wenJianXiuDinService;
+
     @RequestMapping("/testConnect")
     public String testConnect(){
 
@@ -823,6 +829,13 @@ public class controller {
          gongWeiFuGaiLvZongGongWeiShuService.change(quYu,shuliang);
         }
 
+        /*问题清单表
+        * 方法一 导入问题清单原始数据
+        * 方法二 读到所有问题清单数据
+        * 方法三 按月份读取问题清单数据
+        * 方法四 按ID改变问题清单一条数据（一个对象）的状态
+        *
+        * */
         @PostMapping("/exportWenTiQinDan")
         public void exportWenTiQinDan(@RequestParam("file") MultipartFile file) throws IOException{
             FileInputStream fns=(FileInputStream)file.getInputStream();
@@ -864,4 +877,91 @@ public class controller {
         public void changeZhuangTai(String id,String zhuangtai){
             wenTiQinDanService.changeZhuangTai(id,zhuangtai);
         }
-    }
+
+        /*文件修订计划数表
+        * 方法一 按日期查看所有计划数表
+        * 方法二 配置（改变）表计划数
+        * 方法三 新增计划(参数： 日期 区域 计划数 )
+        * */
+
+        @RequestMapping("/selectWenJianXiuDinByDate")
+        public List<WenJianXiuDinJiHua> selectWenJianXiuDinByDate(String date){
+            return wenJianXiuDinJiHuaService.selectWenJianXiuDinJiHuaByDate(date);
+        }
+
+        @RequestMapping("/changeWenJianXiuDinJiHua")
+        public void changeWenJianXiuDinJiHua(int id,String jihuashu){
+            wenJianXiuDinJiHuaService.changeWenJianXiuDinJiHua(id,jihuashu);
+        }
+
+        @RequestMapping("/addWenJianXiuDinjihua")
+        public void addWenJianXiuDinjihua(String quYu,String jiHuaShu,String date){
+            wenJianXiuDinJiHuaService.addWenJianXiuDinjihua(quYu,jiHuaShu,date);
+        }
+        /**
+         * 文件修订那张表 WenJianXiuDin  一般来说一张表对应一个元数据
+         * 1.添加新数据
+         * 2.查看所有数据
+         * 3.根据日期选择查看数据
+         * 4.删除数据
+         * 5.获得二级数据  用在echarts图表上的数据
+         * */
+        @PostMapping("/exportWenJianXiuDin")
+        public void exportWenJianXiuDin(@RequestParam("file") MultipartFile file) throws IOException{
+            FileInputStream fns=(FileInputStream)file.getInputStream();
+            XSSFWorkbook wb=new XSSFWorkbook(fns);//xssWorkbook少了hssworkbook的解析成 POIFSFileSystem数据类型这一步
+            XSSFSheet sheetAt = wb.getSheetAt(0);
+            if(sheetAt==null) {
+                return;
+            }
+            for(int rowIndex=1;rowIndex<sheetAt.getLastRowNum();rowIndex++){
+                WenJianXiuDin wenJianXiuDin=new WenJianXiuDin();
+                wenJianXiuDin.setPinShenRiQi(sheetAt.getRow(rowIndex).getCell(6).toString());//评审日期字段加进来
+                wenJianXiuDin.setQuYu(sheetAt.getRow(rowIndex).getCell(7).toString());
+                wenJianXiuDin.setWenJianMinChen(sheetAt.getRow(rowIndex).getCell(10).toString());
+                wenJianXiuDin.setXiuGaiLeiXin(sheetAt.getRow(rowIndex).getCell(17).toString());
+                wenJianXiuDinService.addWenJian(wenJianXiuDin);
+            }
+        }
+
+        @RequestMapping("/selectAllWenJian")
+        public List<WenJianXiuDin> selectAllWenJian(int pageNum){
+            return wenJianXiuDinService.selectAllWenJian(pageNum);
+        }
+
+        @RequestMapping("/selectWenJianByMonth")
+        public List<WenJianXiuDin> selectWenJianByMonth(String month){
+            return wenJianXiuDinService.selectWenJianByMonth(month);//这里能很好的解释参数关系
+        }
+
+        @RequestMapping("/deleteWenJian")
+        public void deleteWenJian(int id){
+            wenJianXiuDinService.deleteWenJian(id);
+        }
+
+        @RequestMapping("/getSencondWenJianDataByDate")
+        public List<WenJianXiuDinSencondData> getSencondWenJianDataByDate(String date){
+            List<WenJianXiuDinJiHua> wenJianJiHuaShu= wenJianXiuDinJiHuaService.selectWenJianXiuDinJiHuaByDate(date);//获得当月计划数据
+            System.out.println(wenJianJiHuaShu);
+            List<WenJianXiuDin> wenJianXiuDinList=wenJianXiuDinService.selectWenJianByMonth(date);//获得当月回顾数据
+            List<WenJianXiuDinSencondData> wenJianXiuDinSencondDataList =new ArrayList<>();//最终返回的数据
+            for(int i=0;i<wenJianJiHuaShu.size();i++){   //以计划数为基点循环
+                int x=0;//每次外层循环循环时  刷新x的数据
+                WenJianXiuDinSencondData wenJianXiuDinSencondData= new WenJianXiuDinSencondData();
+                wenJianXiuDinSencondData.setQuYu(wenJianJiHuaShu.get(i).getQuYu());//上面不加泛型的话 这里是没有.getQuYu的
+                wenJianXiuDinSencondData.setJiHuaShu(wenJianJiHuaShu.get(i).getJiHuaShu());  //新建的对象添加了计划和计划数 下面还要往里面添加真实的数量
+                for (int j = 0; j <wenJianXiuDinList.size() ; j++) {
+                   if (wenJianXiuDinList.get(j).getQuYu().equals(wenJianJiHuaShu.get(i).getQuYu())){//当内层循环循环到的区域和当前的外层循环的计划区域相同时
+                       x=x+1;//内层循环循环完毕 X已经有了一定的值
+                   }
+                }
+                wenJianXiuDinSencondData.setWanChenShu(String.valueOf(x));//完成数加入进去
+                wenJianXiuDinSencondDataList.add(i,wenJianXiuDinSencondData);//以计划数为基点 计划数每循环一次  往最终返回的列表里添加数据
+            }
+
+
+
+            return  wenJianXiuDinSencondDataList;
+        };
+
+}

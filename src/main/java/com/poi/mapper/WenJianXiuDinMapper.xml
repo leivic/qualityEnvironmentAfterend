@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.poi.mapper.WenJianXiuDinDao">
+    <insert id="addWenJian" parameterType="com.poi.polo.WenJianXiuDin"> <!-- select是reultType 代表返回值类型，而我是insert 不反回，所以是parameterType，代表参数类型 -->
+        insert into wenjianxiudin
+        (pinshenriqi,quyu,wenjianminchen,xiugaileixin)
+        select #{pinShenRiQi},#{quYu},#{wenJianMinChen},#{xiuGaiLeiXin} from dual
+        where not exists (
+        select pinshenriqi,quyu,wenjianminchen from wenjianxiudin where pinshenriqi = #{pinShenRiQi} and quyu=#{quYu} and wenjianminchen=#{wenJianMinChen}
+        );
+        <!--每条数据都重复 不添加进表 不可能每条数据重复 因为日期 -->
+        alter table wenjianxiudin drop id;
+        alter table wenjianxiudin add id bigint primary key not null auto_increment first;
+    </insert>
+    <select id="selectAllWenJian" resultType="com.poi.polo.WenJianXiuDin">
+        select id,pinshenriqi,quyu,wenjianminchen,xiugaileixin from wenjianxiudin order by id desc
+    </select>
+
+    <select id="selectWenJianByMonth" resultType="com.poi.polo.WenJianXiuDin">
+        select id,pinshenriqi,quyu,wenjianminchen,xiugaileixin from wenjianxiudin where  left (pinshenriqi,7)=#{date}
+    </select>
+
+     <delete id="deleteWenJian">
+        delete  from wenjianxiudin where id=#{id};
+        alter table wenjianxiudin drop id;
+        alter table wenjianxiudin add id bigint primary key not null auto_increment first;
+     </delete>
+
+</mapper>

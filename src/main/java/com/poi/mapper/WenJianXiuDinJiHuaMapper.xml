@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.poi.mapper.WenJianXiuDinJiHuaDao">
+
+    <select id="selectWenJianXiuDinJiHuaByDate" resultType="com.poi.polo.WenJianXiuDinJiHua">
+        select id,quyu,date,jihuashu from wenjianxiudinjihua where left(date,7)=#{date} order by id desc
+    </select>
+
+
+    <update id="changeWenJianXiuDinJiHua" >
+        update wenjianxiudinjihua set jihuashu=#{jihuashu} where id=#{id}
+    </update>
+
+    <insert id="addWenJianXiuDinjihua" parameterType="com.poi.polo.WenJianXiuDinJiHua">
+        insert into wenjianxiudinjihua(date,quyu,jihuashu) values (#{date},#{quyu},#{jihuashu});
+        alter table wentiwenjianxiudinjihuaqindan drop id;
+        alter table wenjianxiudinjihua add id bigint primary key not null auto_increment first;
+    </insert>
+
+</mapper>
