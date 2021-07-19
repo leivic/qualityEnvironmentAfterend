@@ -19,7 +19,7 @@ public class WenJianXiuDinService {
     };
 
     public List<WenJianXiuDin> selectAllWenJian(int pageNum){
-        PageHelper.startPage(pageNum,8);
+        PageHelper.startPage(pageNum,10);
         return wenJianXiuDinDao.selectAllWenJian();
     };
 

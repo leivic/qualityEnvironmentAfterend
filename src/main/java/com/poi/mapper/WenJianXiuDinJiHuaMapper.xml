@@ -14,8 +14,8 @@
     </update>
 
     <insert id="addWenJianXiuDinjihua" parameterType="com.poi.polo.WenJianXiuDinJiHua">
-        insert into wenjianxiudinjihua(date,quyu,jihuashu) values (#{date},#{quyu},#{jihuashu});
-        alter table wentiwenjianxiudinjihuaqindan drop id;
+        insert into wenjianxiudinjihua(date,quyu,jihuashu) values (#{date},#{quYu},#{jiHuaShu});
+        alter table wenjianxiudinjihua drop id;
         alter table wenjianxiudinjihua add id bigint primary key not null auto_increment first;
     </insert>
 

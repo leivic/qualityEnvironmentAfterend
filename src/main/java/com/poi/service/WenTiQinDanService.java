@@ -14,12 +14,12 @@ public class WenTiQinDanService {
     private WenTiQinDanDao wenTiQinDanDao;
 
     public List<WenTiQinDan> selectALLWenTi(int pageNum){
-        PageHelper.startPage(pageNum,8);
+        PageHelper.startPage(pageNum,10);
         return wenTiQinDanDao.selectALLWenTi();
     };
 
      public List<WenTiQinDan> selectWenTiByDate(String date,int pageNum){
-         PageHelper.startPage(pageNum,8);
+         PageHelper.startPage(pageNum,10);
          return wenTiQinDanDao.selectWenTiByDate(date);
      };
 

@@ -15,7 +15,7 @@ public class GongWeiZhiLiangShengTaiYiShiService {
     private GongWeiZhiLiangShengTaiYiShiDao gongWeiZhiLiangShengTaiYiShiDao;
 
     public List<GongWeiZhiLiangShengTaiYiShi>selectALLShengTaiYiShiData(int pageNum){
-        PageHelper.startPage(pageNum,8);//分页插件
+        PageHelper.startPage(pageNum,10);//分页插件
       return gongWeiZhiLiangShengTaiYiShiDao.selectALLShengTaiYiShiData();
     };
 

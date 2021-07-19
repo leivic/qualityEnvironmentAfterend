@@ -19,7 +19,7 @@ public class GongWeiFuGaiLvService {
     }
 
     public List<GongWeiFuGaiLv> selectAllGongWeiFuGaiLv(int pageNum){
-        PageHelper.startPage(pageNum,8);
+        PageHelper.startPage(pageNum,10);
         return gongWeiFuGaiLvDao.selectAllGongWeiFuGaiLv();
     };
 
