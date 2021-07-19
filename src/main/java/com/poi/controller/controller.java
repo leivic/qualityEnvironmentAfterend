@@ -964,4 +964,50 @@ public class controller {
             return  wenJianXiuDinSencondDataList;
         };
 
+        @RequestMapping("/getWenJianXiuDinThirdData")
+        public List<WenJianXiuDinThirdData> getWenJianXiuDinThirdData(String date){
+            List<WenJianXiuDinThirdData> wenJianXiuDinThirdDataList=new ArrayList<>();//最终返回的数据
+            List<WenJianXiuDinJiHua> wenJianJiHuaShu= wenJianXiuDinJiHuaService.selectWenJianXiuDinJiHuaByDate(date);//获得当月计划数据
+            System.out.println(wenJianJiHuaShu);
+            List<WenJianXiuDin> wenJianXiuDinList=wenJianXiuDinService.selectWenJianByMonth(date);//获得当月回顾数据
+            System.out.println(wenJianXiuDinList);
+
+
+            List<String> quYuMinChen=wenJianJiHuaShu.stream().map(WenJianXiuDinJiHua::getQuYu).distinct().collect(Collectors.toList());//得到单纯区域名称的集合
+            for(int i=0,n=quYuMinChen.size();i<n;i++){
+                final int d=i;
+                List<WenJianXiuDin> filterWenJian=wenJianXiuDinList.stream().filter(wenJianXiuDin ->wenJianXiuDin.getQuYu().equals(quYuMinChen.get(d))).collect(Collectors.toList());
+                System.out.println(filterWenJian);
+                //得到每个区域的集合了 再找出这个区域所有的修改类型
+                List<String> filterWenJianLeiXin=filterWenJian.stream().map(WenJianXiuDin::getXiuGaiLeiXin).distinct().collect(Collectors.toList());//得到所有修改类型的集合
+                for (int j = 0; j <filterWenJianLeiXin.size() ; j++) {
+                    final int x=j;
+                    List<WenJianXiuDin> filterWenJianLeiXinLength=wenJianXiuDinList.stream().filter(wenJianXiuDin ->wenJianXiuDin.getXiuGaiLeiXin().equals(filterWenJianLeiXin.get(x))).collect(Collectors.toList());//到这里就是各个区域内 同样的修改类型的集合
+                    WenJianXiuDinThirdData wenJianXiuDinThirdData=new WenJianXiuDinThirdData();//创建对象
+                    wenJianXiuDinThirdData.setQuYu(quYuMinChen.get(i));//给对象的区域赋值
+                    wenJianXiuDinThirdData.setXiuGaiLeiXin(filterWenJianLeiXin.get(j));//给对象的修改类型赋值
+                    wenJianXiuDinThirdData.setShuLiang(filterWenJianLeiXinLength.size());//给对象的数量赋值
+                    wenJianXiuDinThirdDataList.add(j,wenJianXiuDinThirdData);
+                }
+            }
+            /*思路 1.计划集合过滤出只有计划的那个集合*  /
+
+
+
+
+           /* for (int i = 0; i <wenJianJiHuaShu.size() ; i++) {
+                for (int j = 0; j <wenJianXiuDinList.size() ; j++) {
+                    WenJianXiuDinThirdData wenJianXiuDinThirdData=new WenJianXiuDinThirdData();
+                    if (wenJianXiuDinList.get(j).getQuYu().equals(wenJianJiHuaShu.get(i).getQuYu())){//当内层循环循环到的区域和当前的外层循环的计划区域相同时 这里是在通过外层循环控制区域范围 当处于区域范围时
+                        wenJianXiuDinThirdData.setXiuGaiLeiXin(wenJianXiuDinList.get(j).getXiuGaiLeiXin());
+                        wenJianXiuDinThirdData.setQuYu(wenJianJiHuaShu.get(i).getQuYu());
+                        wenJianXiuDinThirdData.setShuLiang("1");
+                        System.out.println(wenJianXiuDinThirdData);
+                        wenJianXiuDinThirdDataList.add(j,wenJianXiuDinThirdData);//循环创建对象 赋值 加入集合 操作一气呵成
+                    }
+                }
+            }老版本的 看起来没错的写法    */
+            return wenJianXiuDinThirdDataList;
+        }
+
 }

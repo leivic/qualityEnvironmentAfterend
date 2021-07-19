@@ -47,7 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 /*匿名请求：不需要进行登录拦截的url*/
                 .authorizeRequests()
-                .antMatchers("/hello","/findALLUser","/exportGongWeiFuHe","/selectGongWeiFuHeListByDate","/deleteGongWeiFuHeById","/getLastGongWeiData","/exportGuoChenFuHe","/exportGongWeiZhiLiangShengTaiYiShi","/getGongWeiFuGaiLvSecondDataByYear","/getGongWeiFuGaiLvSecondDataByYear","/exportWenTiQinDan","/getSencondWenJianDataByDate").permitAll() //允许任何人访问
+                .antMatchers("/hello","/findALLUser","/exportGongWeiFuHe","/selectGongWeiFuHeListByDate","/deleteGongWeiFuHeById","/getLastGongWeiData","/exportGuoChenFuHe","/exportGongWeiZhiLiangShengTaiYiShi","/getGongWeiFuGaiLvSecondDataByYear","/getGongWeiFuGaiLvSecondDataByYear","/exportWenTiQinDan","/getSencondWenJianDataByDate","/getWenJianXiuDinThirdData").permitAll() //允许任何人访问
                 .antMatchers("/admin").hasRole("admin")//当用户的角色是为admin时可以访问这个目录
                 .antMatchers("/getUser","/a1").hasAuthority("select") //当用户具有select权限时才可以访问这个方法
                 .anyRequest().authenticated()//其他的路径都是登录后才可访问
