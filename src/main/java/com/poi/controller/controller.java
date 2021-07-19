@@ -974,16 +974,17 @@ public class controller {
 
 
             List<String> quYuMinChen=wenJianJiHuaShu.stream().map(WenJianXiuDinJiHua::getQuYu).distinct().collect(Collectors.toList());//得到单纯区域名称的集合
-            for(int i=0,n=quYuMinChen.size();i<n;i++){
+            System.out.println("区域名称集合是"+quYuMinChen);
+            for(int i=0,n=quYuMinChen.size();i<n;i++){//循环每个区域名称
                 final int d=i;
                 List<WenJianXiuDin> filterWenJian=wenJianXiuDinList.stream().filter(wenJianXiuDin ->wenJianXiuDin.getQuYu().equals(quYuMinChen.get(d))).collect(Collectors.toList());
-                System.out.println(filterWenJian);
+                System.out.println(quYuMinChen.get(i)+"分别的区域的集合是"+filterWenJian);
                 //得到每个区域的集合了 再找出这个区域所有的修改类型
                 List<String> filterWenJianLeiXin=filterWenJian.stream().map(WenJianXiuDin::getXiuGaiLeiXin).distinct().collect(Collectors.toList());//得到所有修改类型的集合
                 System.out.println(quYuMinChen.get(i)+"所有修改类型的集合为"+filterWenJianLeiXin);
                 for (int j = 0; j <filterWenJianLeiXin.size() ; j++) {
                     final int x=j;
-                    List<WenJianXiuDin> filterWenJianLeiXinLength=wenJianXiuDinList.stream().filter(wenJianXiuDin ->wenJianXiuDin.getXiuGaiLeiXin().equals(filterWenJianLeiXin.get(x))).collect(Collectors.toList());//到这里就是各个区域内 同样的修改类型的集合
+                    List<WenJianXiuDin> filterWenJianLeiXinLength=filterWenJian.stream().filter(wenJianXiuDin ->wenJianXiuDin.getXiuGaiLeiXin().equals(filterWenJianLeiXin.get(x))).collect(Collectors.toList());//到这里就是各个区域内 同样的修改类型的集合
                     WenJianXiuDinThirdData wenJianXiuDinThirdData=new WenJianXiuDinThirdData();//创建对象
                     wenJianXiuDinThirdData.setQuYu(quYuMinChen.get(i));//给对象的区域赋值
                     wenJianXiuDinThirdData.setXiuGaiLeiXin(filterWenJianLeiXin.get(j));//给对象的修改类型赋值
