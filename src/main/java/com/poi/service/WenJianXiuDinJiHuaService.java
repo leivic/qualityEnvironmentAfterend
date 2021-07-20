@@ -25,4 +25,8 @@ public class WenJianXiuDinJiHuaService {
      public void addWenJianXiuDinjihua(String quYu,String jiHuaShu,String date){
         wenJianXiuDinJiHuaDao.addWenJianXiuDinjihua(quYu,jiHuaShu,date);
     }
+
+    public void deletejiHua(String id){
+        wenJianXiuDinJiHuaDao.deletejiHua(id);
+    }
 }

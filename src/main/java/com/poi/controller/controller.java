@@ -882,6 +882,7 @@ public class controller {
         * 方法一 按日期查看所有计划数表
         * 方法二 配置（改变）表计划数
         * 方法三 新增计划(参数： 日期 区域 计划数 )
+        * 方法四 删除计划
         * */
 
         @RequestMapping("/selectWenJianXiuDinByDate")
@@ -897,6 +898,10 @@ public class controller {
         @RequestMapping("/addWenJianXiuDinjihua")
         public void addWenJianXiuDinjihua(String quYu,String jiHuaShu,String date){
             wenJianXiuDinJiHuaService.addWenJianXiuDinjihua(quYu,jiHuaShu,date);
+        }
+        @RequestMapping("/deleteJiHuaById")
+        public void deleteJiHuaById(String id){
+            wenJianXiuDinJiHuaService.deletejiHua(id);
         }
         /**
          * 文件修订那张表 WenJianXiuDin  一般来说一张表对应一个元数据

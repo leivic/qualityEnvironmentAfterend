@@ -19,4 +19,9 @@
         alter table wenjianxiudinjihua add id bigint primary key not null auto_increment first;
     </insert>
 
+    <delete id="deletejiHua">
+        delete from wenjianxiudinjihua where id=#{id};
+        alter table wenjianxiudinjihua drop id;
+        alter table wenjianxiudinjihua add id bigint primary key not null auto_increment first;
+    </delete>
 </mapper>
