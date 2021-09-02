@@ -14,4 +14,5 @@ public interface GuoChenFuHeDao {
 
     List<GuoChenFuHe> selectGuoChenFuHeListByDate(@Param("date")String date, @Param("pingShengXingZhi")String pingShengXingZhi);//mybtis传入多个参数时需要 @Param
     //上面ALL是全部数据 返回在列表里面 这里是按月份和性质筛查数据 返回在Echarts里面
+    void deletGuoChenByid(int id);
 }

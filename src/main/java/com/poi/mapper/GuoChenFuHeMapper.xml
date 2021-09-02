@@ -12,11 +12,16 @@
     </insert>
 
     <select id="selectAllGuoChenFuHe" resultType="com.poi.polo.GuoChenFuHe">
-        select id,assignmentid,workmodel,itemdescription,zipinorchoucha,Review,guochenminchen,guochenpeifen,guochendefen,guochenpercentage,auditquestions,pinshenquyu,pinshenshijian,yinshenrenyuan from guochenfuhelv order by id desc
+        select id,assignmentid,workmodel,itemdescription,zipinorchoucha,Review,guochenminchen,guochenpeifen,guochendefen,guochenpercentage,auditquestions,pinshenquyu,pinshenshijian,yinshenrenyuan from guochenfuhelv order by id asc
     </select>
 
     <select id="selectGuoChenFuHeListByDate" resultType="com.poi.polo.GuoChenFuHe">
         select id,assignmentid,workmodel,itemdescription,zipinorchoucha,Review,guochenminchen,guochenpeifen,guochendefen,guochenpercentage,auditquestions,pinshenquyu,pinshenshijian,yinshenrenyuan from guochenfuhelv where left(pinshenshijian,7) = #{date} and zipinorchoucha=#{pingShengXingZhi}
     </select>
 
+    <delete id="deletGuoChenByid">
+        delete from guochenfuhelv where id = #{id};
+        alter table guochenfuhelv drop id;
+        alter table guochenfuhelv add id bigint primary key not null auto_increment first;
+    </delete>
 </mapper>

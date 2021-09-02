@@ -22,5 +22,4 @@ public class GongWeiFuHe {
     private String pinShenQuYu;//评审区域
     private String pinShenShiJian;//评审时间
     private String yinShenRenYuan;//迎审人员
-
 }

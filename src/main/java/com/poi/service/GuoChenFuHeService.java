@@ -18,12 +18,16 @@ public class GuoChenFuHeService {
         guoChenFuHeDao.addGuoChenFuHe(guoChenFuHe);
     };
 
-    public List<GuoChenFuHe> selectAllGuoChenFuHe(int pageNum)throws Exception{
-        PageHelper.startPage(pageNum,10);//分页插件
+    public List<GuoChenFuHe> selectAllGuoChenFuHe(int pageNum,int limit)throws Exception{
+        PageHelper.startPage(pageNum,limit);//分页插件
         return guoChenFuHeDao.selectAllGuoChenFuHe();
     };
 
     public  List<GuoChenFuHe> selectGuoChenFuHeListByDate(String date, String pingShengXingZhi){
         return guoChenFuHeDao.selectGuoChenFuHeListByDate(date,pingShengXingZhi);
     }
+
+    public  void deletGuoChenByid(int id){
+        guoChenFuHeDao.deletGuoChenByid(id);
+    };
 }

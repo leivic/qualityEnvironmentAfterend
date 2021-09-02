@@ -25,8 +25,8 @@ public class GongWeiFuHeService {
         gongWeiFuHeDao.deleteGongWeiFuHeById(id);
     };
 
-    public List<GongWeiFuHe> selectAllGongWeiFuHe(int pageNum)throws Exception{
-        PageHelper.startPage(pageNum,10);//分页插件
+    public List<GongWeiFuHe> selectAllGongWeiFuHe(int pageNum,int limit)throws Exception{
+        PageHelper.startPage(pageNum,limit);//分页插件
         return gongWeiFuHeDao.selectAllGongWeiFuHe();
     };
 }
